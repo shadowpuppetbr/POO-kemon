@@ -1,4 +1,3 @@
-
 package game;
 
 public class Bot extends Trainer implements Runnable{
