@@ -6,7 +6,7 @@ public class GameStarter {
     public static void main(String[] args) {
     Game gm = new Game();
 
-    gm.exec();
+    gm.getScreen();
 
 
 
