@@ -1,4 +1,61 @@
 package game;
 
-public class Board {
+import core.enums.PokeType;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class Board extends JPanel {
+    private static final int BOARD_SIZE = 10; // 10x10 board
+    private Cell[][] cells;
+
+    public Board() {
+        setLayout(new GridLayout(BOARD_SIZE, BOARD_SIZE));
+        initializeBoard();
+    }
+
+    private void initializeBoard() {
+        cells = new Cell[BOARD_SIZE][BOARD_SIZE];
+
+        // Define the four sectors
+        PokeType topLeftType = PokeType.WATER;
+        PokeType topRightType = PokeType.EARTH;
+        PokeType bottomLeftType = PokeType.ELETRIC;
+        PokeType bottomRightType = PokeType.FOREST;
+
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                PokeType regionType;
+
+                // Determine which sector the cell belongs to
+                if (row < BOARD_SIZE / 2 && col < BOARD_SIZE / 2) {
+                    // Top-left sector: WATER
+                    regionType = topLeftType;
+                } else if (row < BOARD_SIZE / 2 && col >= BOARD_SIZE / 2) {
+                    // Top-right sector: EARTH
+                    regionType = topRightType;
+                } else if (row >= BOARD_SIZE / 2 && col < BOARD_SIZE / 2) {
+                    // Bottom-left sector: ELETRIC
+                    regionType = bottomLeftType;
+                } else {
+                    // Bottom-right sector: FOREST
+                    regionType = bottomRightType;
+                }
+
+                cells[row][col] = new Cell(regionType);
+                add(cells[row][col]);
+            }
+        }
+    }
+
+    public Cell getCell(int row, int col) {
+        if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE) {
+            return cells[row][col];
+        }
+        return null;
+    }
+
+    public int getBoardSize() {
+        return BOARD_SIZE;
+    }
 }
