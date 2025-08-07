@@ -20,7 +20,7 @@ public class Board extends JPanel {
         // Define the four sectors
         PokeType topLeftType = PokeType.WATER;
         PokeType topRightType = PokeType.EARTH;
-        PokeType bottomLeftType = PokeType.ELETRIC;
+        PokeType bottomLeftType = PokeType.ELECTRIC;
         PokeType bottomRightType = PokeType.FOREST;
 
         for (int row = 0; row < BOARD_SIZE; row++) {

@@ -1,15 +1,7 @@
 package game;
 import java.util.Random;
-
-enum PokeType {
-    WATER, EARTH, ELECTRIC, FOREST
-}
-
-enum PokeState {
-    WILD, NORMAL, STUNNED, DISABLED
-}
-
-
+import core.enums.PokeState;
+import core.enums.PokeType;
 
 abstract class Pokemon {
     protected int hp;
