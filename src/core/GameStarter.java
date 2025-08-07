@@ -1,15 +1,10 @@
 package core;
 
-import game.Game;
+import view.Menu;
 
 public class GameStarter {
     public static void main(String[] args) {
-    Game gm = new Game();
-
-    gm.getScreen();
-
-
-
+        Menu menu = new Menu();
+        menu.setVisible(true);
     }
 }
-

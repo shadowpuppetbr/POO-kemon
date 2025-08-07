@@ -19,7 +19,7 @@ abstract class Pokemon {
     protected int strength;
     protected String name;
     protected PokeState state;
-
+    
     public Pokemon(String name, int strength, int level, PokeType type) {
         this.name = name;
         this.strength = strength;
@@ -29,7 +29,7 @@ abstract class Pokemon {
         this.type = type;
         this.state = PokeState.WILD;
     }
-
+    
     public abstract int attack();
     public void takeDamage(int value, PokeType region){
         if( region == PokeType.WATER){
@@ -43,9 +43,9 @@ abstract class Pokemon {
             this.state = PokeState.DISABLED;
         }
     }
-
+    
    public void levelUp() {
-        experience += 10;
+       experience += 10;
         if(experience >= 100) {
             level++;
             experience = 0;
@@ -56,6 +56,8 @@ abstract class Pokemon {
     
 }
 
+
+@SuppressWarnings("unused")
 class ForestPokemon extends Pokemon{
     
     Random random = new Random();
@@ -73,6 +75,8 @@ class ForestPokemon extends Pokemon{
     }
     
 }
+
+@SuppressWarnings("unused")
 class WaterPokemon extends Pokemon{
     Random random = new Random();
     public WaterPokemon(String name, int strength, int level) {
@@ -83,10 +87,11 @@ class WaterPokemon extends Pokemon{
         int damage = (random.nextInt(10) + this.strength)* this.level;
         return damage;
     }
-
+    
     
 }
 
+@SuppressWarnings("unused")
 class EarthPokemon extends Pokemon{
     private int turn;
     Random random = new Random();
@@ -105,10 +110,11 @@ class EarthPokemon extends Pokemon{
         }
         return damage;
     }
-
+    
     
 }
 
+@SuppressWarnings("unused")
 class ElectricPokemon extends Pokemon{
     Random random = new Random();
     public ElectricPokemon(String name, int strength, int level) {
