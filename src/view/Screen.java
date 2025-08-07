@@ -1,9 +1,8 @@
 package view;
 
 import game.Board;
-
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class Screen extends JFrame {
     private Board board;
@@ -14,6 +13,9 @@ public class Screen extends JFrame {
 
     private void initializeScreen() {
         setTitle("POOkemon");
+
+        Image icon = new ImageIcon("src/resources/images/pokeball.png").getImage();
+        setIconImage(icon.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
