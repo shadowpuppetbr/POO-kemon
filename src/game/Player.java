@@ -10,7 +10,7 @@ public class Player extends Trainer {
     
     public static void main(String[] args) {
         Player player = new Player();
-        Pokemon pokemon = new Pokemon();
+        Pokemon pokemon = new EarthPokemon("Pokemon",10,1);
         
         for(int i = 0; i < 10; i++){
            player.capturePokemon(pokemon);

@@ -40,13 +40,13 @@ public class Cell extends JButton {
 
     private void setRegion(PokeType regionType) {
         if (regionType == PokeType.WATER) {
-            setBackground(new Color(0, 0, 255));
+            setBackground(new Color(106, 195, 207));
         } else if (regionType == PokeType.EARTH) {
-            setBackground(new Color(0, 255, 0));
+            setBackground(new Color(120, 80, 40));
         } else if (regionType == PokeType.ELETRIC) {
-            setBackground(new Color(255, 255, 0));
+            setBackground(new Color(248, 224, 40));
         } else if (regionType == PokeType.FOREST) {
-            setBackground(new Color(0, 255, 255));
+            setBackground(new Color(176, 248, 128));
         }
     }
 

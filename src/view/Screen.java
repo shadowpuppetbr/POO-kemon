@@ -17,12 +17,35 @@ public class Screen extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Create and add the board
+        // NORTH informações do jogo
+        JPanel infoPanel = new JPanel(new FlowLayout());
+        JLabel scoreLabel = new JLabel("Placar: 0");
+        JLabel roundLabel = new JLabel("Rodada: 1");
+        infoPanel.add(scoreLabel);
+        infoPanel.add(roundLabel);
+        add(infoPanel, BorderLayout.NORTH);
+
+        // CENTER tabuleiro
         board = new Board();
-        add(board, BorderLayout.CENTER);
+        board.setPreferredSize(new Dimension(600, 600));
+        JPanel boardWrapper = new JPanel();
+        boardWrapper.setLayout(new FlowLayout());
+        boardWrapper.add(board);
+        add(boardWrapper, BorderLayout.CENTER);
+
+        // EAST botões de controle
+        JPanel controlPanel = new JPanel();
+        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+        JButton attackButton = new JButton("Atacar");
+        JButton defendButton = new JButton("Defender");
+        JButton endTurnButton = new JButton("Finalizar Turno");
+        controlPanel.add(attackButton);
+        controlPanel.add(defendButton);
+        controlPanel.add(endTurnButton);
+        add(controlPanel, BorderLayout.EAST);
 
         // Set the window size
-        setSize(500, 500);
+        setSize(1260, 720);
         setLocationRelativeTo(null); // Center the window
         setVisible(true);
     }
