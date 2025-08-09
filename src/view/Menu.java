@@ -21,21 +21,21 @@ public class Menu extends JFrame {
         JButton loadButton = new JButton("Carregar Jogo");
         JButton exitButton = new JButton("Sair");
 
-        playButton.addActionListener(e -> {
+        playButton.addActionListener(_ -> {
             new Game().start();
             
-            Menu.this.dispose();
+            dispose();
         });
 
-        saveButton.addActionListener(e -> {
+        saveButton.addActionListener(_ -> {
             JOptionPane.showMessageDialog(Menu.this, "jogo salvo");
         });
         
-        loadButton.addActionListener(e -> {
+        loadButton.addActionListener(_ -> {
             JOptionPane.showMessageDialog(Menu.this, "jogo carregado");
         });
 
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(_ -> System.exit(0));
 
         // Main panel: NORTH -> Image | CENTER -> Buttons
         JPanel mainPanel = new JPanel(new BorderLayout(10, 20));

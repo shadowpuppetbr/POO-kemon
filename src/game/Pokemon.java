@@ -2,8 +2,9 @@ package game;
 import core.enums.PokeState;
 import core.enums.PokeType;
 import java.util.Random;
+import javax.swing.ImageIcon;
 
-abstract class Pokemon {
+public abstract class Pokemon {
     protected int hp;
     protected int level;
     protected int experience;
@@ -11,6 +12,8 @@ abstract class Pokemon {
     protected int strength;
     protected String name;
     protected PokeState state;
+    protected ImageIcon image;
+    protected static final Random random = new Random();
     
     public Pokemon(String name) {
         this.name = name;
@@ -19,6 +22,7 @@ abstract class Pokemon {
         this.experience = 0;
         this.hp = 100;
         this.state = PokeState.WILD;
+        
     }
     
     public abstract int attack();
@@ -44,14 +48,28 @@ abstract class Pokemon {
         }
     }
 
+    protected void setImage(ImageIcon image) {
+        this.image = image;
+    }
+
+    public ImageIcon getImage(){
+        return this.image;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public PokeType getType() {
+        return this.type;
+    }
+
     
 }
 
 
-@SuppressWarnings("unused")
 class ForestPokemon extends Pokemon{
-    
-    Random random = new Random();
+
     public ForestPokemon(String name) {
         super(name);
         this.type = PokeType.FOREST;
@@ -68,9 +86,9 @@ class ForestPokemon extends Pokemon{
     
 }
 
-@SuppressWarnings("unused")
+
 class WaterPokemon extends Pokemon{
-    Random random = new Random();
+
     public WaterPokemon(String name) {
         super(name);
         this.type = PokeType.WATER;
@@ -84,10 +102,10 @@ class WaterPokemon extends Pokemon{
     
 }
 
-@SuppressWarnings("unused")
+
 class GroundPokemon extends Pokemon{
     private int turn;
-    Random random = new Random();
+
     public GroundPokemon(String name) {
         super(name);
         this.type = PokeType.GROUND;
@@ -108,9 +126,9 @@ class GroundPokemon extends Pokemon{
     
 }
 
-@SuppressWarnings("unused")
+
 class ElectricPokemon extends Pokemon{
-    Random random = new Random();
+
     public ElectricPokemon(String name) {
         super(name);
         this.type = PokeType.ELECTRIC;

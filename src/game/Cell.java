@@ -5,7 +5,7 @@ import java.awt.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class Cell extends JButton {
+public class Cell extends JButton{
     private Pokemon pokemon;
     private final PokeType regionType;
     private boolean isEmpty = true;
@@ -26,15 +26,14 @@ public class Cell extends JButton {
         this.tiles[3] = new ImageIcon("src/resources/images/tile_forest.jpg").getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
 
         setRegion();
+
     }
 
     public void setPokemon(Pokemon pokemon) {
         this.pokemon = pokemon;
         this.isEmpty = (pokemon == null);
         if (pokemon != null) {
-//            setText(pokemon.getName()); TODO make this method later
-        } else {
-            setText("");
+            setIcon(pokemon.getImage());
         }
     }
 

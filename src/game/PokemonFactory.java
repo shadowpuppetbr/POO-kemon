@@ -1,37 +1,27 @@
 package game;
 
+import javax.swing.ImageIcon;
+
 public class PokemonFactory {
 
     public static Pokemon createPokemon(String name) {
-        switch (name.toLowerCase()) {
-            case "psyduck" -> {
-                return new WaterPokemon("Psyduck");
-            }
-            case "wartortle" -> {
-                return new WaterPokemon("Wartortle");
-            }
-            case "sandshrew" -> {
-                return new GroundPokemon("Sandshrew");
-            }
-            case "sandslash" -> {
-                return new GroundPokemon("Sandslash");
-            }
-            case "pikachu" -> {
-                return new ElectricPokemon("Pikachu");
-            }
-            case "raichu" -> {
-                return new ElectricPokemon("Raichu");
-            }
-            case "bulbassauro" -> {
-                return new ForestPokemon("Bulbassauro");
-            }
-            case "caterpie" -> {
-                return new ForestPokemon("Caterpie");
-            }
+        Pokemon pokemon;
+        // Capitaliza a primeira letra para o nome do Pokémon
+        String capitalizedName = name.substring(0, 1).toUpperCase() + name.substring(1);
 
+        switch (name.toLowerCase()) {
+            case "psyduck", "wartortle" -> pokemon = new WaterPokemon(capitalizedName);
+            case "sandshrew", "sandslash" -> pokemon = new GroundPokemon(capitalizedName);
+            case "pikachu", "raichu" -> pokemon = new ElectricPokemon(capitalizedName);
+            case "bulbassauro", "caterpie" -> pokemon = new ForestPokemon(capitalizedName);
             default -> throw new IllegalArgumentException("Pokémon desconhecido: " + name);
         }
-        
-}
 
+        // Define a imagem usando um caminho consistente baseado no nome em minúsculas
+        String imagePath = "src/resources/images/pokemon/" + name.toLowerCase() + ".png";
+        ImageIcon image = new ImageIcon(imagePath);
+        pokemon.setImage(image);
+
+        return pokemon;
+    }
 }

@@ -5,8 +5,12 @@ import java.awt.*;
 import javax.swing.*;
 
 public class Screen extends JFrame {
-    private Board board;
+    private final Board board;
 
+    public Screen(Board board) {
+        super();
+        this.board = board;
+    }
 
     public void initializeScreen() {
         setTitle("POOkemon");
@@ -18,11 +22,10 @@ public class Screen extends JFrame {
 
         
         // LEFT board
-        board = new Board();
-        board.setPreferredSize(new Dimension(640, 640));
+        this.board.setPreferredSize(new Dimension(640, 640));
         JPanel boardWrapper = new JPanel();
         boardWrapper.setLayout(new FlowLayout());
-        boardWrapper.add(board);
+        boardWrapper.add(this.board);
         add(boardWrapper);
 
         // RIGHT game info
@@ -61,6 +64,6 @@ public class Screen extends JFrame {
     }
 
     public Board getBoard() {
-        return board;
+        return this.board;
     }
 }

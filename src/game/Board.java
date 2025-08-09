@@ -2,6 +2,8 @@ package game;
 
 import core.enums.PokeType;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class Board extends JPanel {
@@ -56,5 +58,40 @@ public class Board extends JPanel {
 
     public int getBoardSize() {
         return BOARD_SIZE;
+    }
+
+    public void letPlayerPlacePokemon(Pokemon pokemon, Runnable onPlacementComplete) {
+        // Uses one listener for all cells
+        ActionListener placementListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Cell clickedCell = (Cell) e.getSource();
+
+                if(clickedCell.getRegionType() != pokemon.getType()) {
+                    JOptionPane.showMessageDialog(null, "Região do tipo " + clickedCell.getRegionType() + " incompatível com pokémon tipo " + pokemon.getType() + ".","Erro de Posicionamento", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                clickedCell.setPokemon(pokemon);
+                
+                // Remove all listeners after placement
+                for(Cell[] cellLines: cells){
+                    for(Cell cell: cellLines){
+                        cell.removeActionListener(this);
+                    }
+
+                }
+                
+                // Callback
+                onPlacementComplete.run();
+            
+            }
+        };
+
+        for (Cell[] row : cells) {
+            for (Cell cell : row) {
+                cell.addActionListener(placementListener);
+            }
+        }
     }
 }

@@ -18,6 +18,10 @@ public abstract class Trainer {
     protected void changePokemon(Pokemon pokemon){
         this.mainPokemon = pokemon;
     }
+
+    protected void addPokemon(Pokemon pokemon) {
+        this.team.add(pokemon);
+    }
     
     protected boolean capturePokemon(Pokemon pokemon){
         if( new Random().nextBoolean() ){
@@ -27,6 +31,6 @@ public abstract class Trainer {
             return false;
         }
     }
-    
+
     
 }
