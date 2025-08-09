@@ -2,7 +2,7 @@ package core.enums;
 
 public enum PokeType {
     WATER,
-    EARTH,
+    GROUND,
     ELECTRIC,
     FOREST,
 }

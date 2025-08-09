@@ -1,7 +1,7 @@
 package game;
-import java.util.Random;
 import core.enums.PokeState;
 import core.enums.PokeType;
+import java.util.Random;
 
 abstract class Pokemon {
     protected int hp;
@@ -12,13 +12,12 @@ abstract class Pokemon {
     protected String name;
     protected PokeState state;
     
-    public Pokemon(String name, int strength, int level, PokeType type) {
+    public Pokemon(String name) {
         this.name = name;
-        this.strength = strength;
-        this.level = level;
+        this.strength = 10;
+        this.level = 1;
         this.experience = 0;
         this.hp = 100;
-        this.type = type;
         this.state = PokeState.WILD;
     }
     
@@ -53,8 +52,9 @@ abstract class Pokemon {
 class ForestPokemon extends Pokemon{
     
     Random random = new Random();
-    public ForestPokemon(String name, int strength, int level) {
-        super(name, strength, level, PokeType.FOREST);
+    public ForestPokemon(String name) {
+        super(name);
+        this.type = PokeType.FOREST;
     }
     @Override
     public int attack(){
@@ -71,8 +71,9 @@ class ForestPokemon extends Pokemon{
 @SuppressWarnings("unused")
 class WaterPokemon extends Pokemon{
     Random random = new Random();
-    public WaterPokemon(String name, int strength, int level) {
-        super(name, strength, level, PokeType.WATER);
+    public WaterPokemon(String name) {
+        super(name);
+        this.type = PokeType.WATER;
     }
     @Override
     public int attack(){
@@ -84,11 +85,12 @@ class WaterPokemon extends Pokemon{
 }
 
 @SuppressWarnings("unused")
-class EarthPokemon extends Pokemon{
+class GroundPokemon extends Pokemon{
     private int turn;
     Random random = new Random();
-    public EarthPokemon(String name, int strength, int level) {
-        super(name, strength, level, PokeType.EARTH);
+    public GroundPokemon(String name) {
+        super(name);
+        this.type = PokeType.GROUND;
     }
     @Override
     public int attack(){
@@ -109,8 +111,9 @@ class EarthPokemon extends Pokemon{
 @SuppressWarnings("unused")
 class ElectricPokemon extends Pokemon{
     Random random = new Random();
-    public ElectricPokemon(String name, int strength, int level) {
-        super(name, strength, level, PokeType.ELECTRIC);
+    public ElectricPokemon(String name) {
+        super(name);
+        this.type = PokeType.ELECTRIC;
     }
     @Override
     public int attack(){

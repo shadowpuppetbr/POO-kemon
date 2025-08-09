@@ -1,9 +1,8 @@
 package game;
 
 import core.enums.PokeType;
-
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class Board extends JPanel {
     private static final int BOARD_SIZE = 10; // 10x10 board
@@ -19,7 +18,7 @@ public class Board extends JPanel {
 
         // Define the four sectors
         PokeType topLeftType = PokeType.WATER;
-        PokeType topRightType = PokeType.EARTH;
+        PokeType topRightType = PokeType.GROUND;
         PokeType bottomLeftType = PokeType.ELECTRIC;
         PokeType bottomRightType = PokeType.FOREST;
 
@@ -32,7 +31,7 @@ public class Board extends JPanel {
                     // Top-left sector: WATER
                     regionType = topLeftType;
                 } else if (row < BOARD_SIZE / 2 && col >= BOARD_SIZE / 2) {
-                    // Top-right sector: EARTH
+                    // Top-right sector: GROUND
                     regionType = topRightType;
                 } else if (row >= BOARD_SIZE / 2 && col < BOARD_SIZE / 2) {
                     // Bottom-left sector: ELETRIC
