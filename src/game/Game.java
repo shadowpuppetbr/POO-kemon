@@ -15,10 +15,9 @@ public class Game {
     private final Screen screen;
     private final Player player;
     private final Bot bot;
-    private ArrayList<Pokemon> wildPokemon;
+    private final ArrayList<Pokemon> wildPokemon;
     private final Random random = new Random();
     private static final String POKEMONS_FILE_PATH = "src/core/pokemons.txt";
-    private boolean isPlayerTurn = true;
 
     public Game() {
         // Initialize the game screen which contains the board
@@ -27,22 +26,21 @@ public class Game {
         this.player = new Player();
         this.bot = new Bot();
         this.wildPokemon = new ArrayList<>();
-        this.bot.setGame(this); // Dá ao bot uma referência ao jogo
     }
     
     public void startNewGame(){ 
 
-        // Inicializa a tela do jogo
+        // Initializes screen
         screen.initializeScreen();
 
         // Creates an array of the pokemon that will be used in the game
-        List<String> pokemonNames = null;
-
+        List<String> pokemonNames;
         try{
             pokemonNames = Files.readAllLines(Paths.get(POKEMONS_FILE_PATH));
         } catch(IOException e){
             JOptionPane.showMessageDialog(screen, "Não foi possível ler o arquivo de Pokémons: " + e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
             System.exit(1); // Exit if we can't load essential game data
+            return;
         }
 
         for(String pokemonName : pokemonNames) {
@@ -77,27 +75,33 @@ public class Game {
     }
     
     private void startGameLoop() {
+        bot.setGame(this);
         startPlayerTurn();
 
         screen.getEndTurnButton().addActionListener(_ -> {
             endPlayerTurn(); // Ends player's turn
         });
+        screen.getChangePokemonButton().addActionListener(_ -> {
+            // TODO
+        });
+        screen.getExitButton().addActionListener(_ -> {
+            System.exit(0);
+        });
 
     }
 
     private void startPlayerTurn() {
-        isPlayerTurn = true;
-        
         screen.getChangePokemonButton().setEnabled(true);
         screen.getExitButton().setEnabled(true);
         screen.getEndTurnButton().setEnabled(true);
+        board.enableCells();
     }
 
     private void endPlayerTurn() {
-        isPlayerTurn = false;
         screen.getChangePokemonButton().setEnabled(false);
         screen.getExitButton().setEnabled(false);
         screen.getEndTurnButton().setEnabled(false);
+        board.disableCells();
 
         // Starts bot's turn in a thread
         new Thread(bot).start();

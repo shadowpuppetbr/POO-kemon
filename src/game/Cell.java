@@ -52,18 +52,22 @@ public class Cell extends JButton{
             case WATER -> {
                 setBackground(new Color(106, 195, 207));
                 setIcon(new ImageIcon(this.tiles[0]));
+                setDisabledIcon(new ImageIcon(this.tiles[0]));
             }
             case GROUND -> {
                 setBackground(new Color(120, 80, 40));
                 setIcon(new ImageIcon(this.tiles[1]));
+                setDisabledIcon(new ImageIcon(this.tiles[1]));
             }
             case ELECTRIC -> {
                 setBackground(new Color(248, 224, 40));
                 setIcon(new ImageIcon(this.tiles[2]));
+                setDisabledIcon(new ImageIcon(this.tiles[2]));
             }
             case FOREST -> {
                 setBackground(new Color(176, 248, 128));
                 setIcon(new ImageIcon(this.tiles[3]));
+                setDisabledIcon(new ImageIcon(this.tiles[3]));
             }
             default -> {
             } 

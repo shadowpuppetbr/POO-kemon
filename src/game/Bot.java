@@ -25,11 +25,11 @@ public class Bot extends Trainer implements Runnable{
         botTurnMsg.setLocationRelativeTo(game.getScreen());
         botTurnMsg.setLayout(new FlowLayout());
         botTurnMsg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        botTurnMsg.add(new JLabel("O Bot está pensando..."));
+        botTurnMsg.add(new JLabel("let bro cook..."));
         botTurnMsg.setVisible(true);
 
         try {
-            Thread.sleep(1500); // Espera 1.5 segundos
+            Thread.sleep(1500); // Waits 1.5 seconds
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -39,7 +39,7 @@ public class Bot extends Trainer implements Runnable{
         botTurnMsg.dispose();
         JOptionPane.showMessageDialog(game.getScreen(), "O Bot atacou!");
 
-        game.endBotTurn(); // Sinaliza para o jogo que o turno do Bot terminou
+        game.endBotTurn();
 
     }
 }

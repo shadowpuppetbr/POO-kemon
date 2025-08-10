@@ -76,8 +76,8 @@ public class Board extends JPanel {
                 clickedCell.setEnabled(false);
                 
                 // Remove all listeners after placement
-                for(Cell[] cellLines: cells){
-                    for(Cell cell: cellLines){
+                for(Cell[] row: cells){
+                    for(Cell cell: row){
                         cell.removeActionListener(this);
                     }
 
@@ -109,4 +109,20 @@ public class Board extends JPanel {
         }
     }
 
+    public void disableCells() {
+        for (Cell[] row : cells) {
+            for (Cell cell : row) {
+                cell.setEnabled(false);
+            }
+        }
+    }
+
+    public void enableCells() {
+        for (Cell[] row : cells) {
+            for (Cell cell : row) {
+                cell.setEnabled(true);
+            }
+        }
+    }
+    
 }
