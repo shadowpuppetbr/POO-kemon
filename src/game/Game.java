@@ -13,14 +13,16 @@ public class Game {
     private final Board board;
     private final Screen screen;
     private final Player player;
-    private Pokemon[] pokemon;
+    private final Bot bot;
+    private ArrayList<Pokemon> wildPokemon;
 
     public Game() {
         // Initialize the game screen which contains the board
         this.board = new Board();
         this.screen = new Screen(board);
         this.player = new Player();
-        this.pokemon = new Pokemon[8];
+        this.bot = new Bot();
+        this.wildPokemon = new ArrayList<>();
         
         
     }
@@ -40,26 +42,37 @@ public class Game {
         }
 
         for(int i = 0; i < pokemonString.size(); i++) {
-            pokemon[i] = PokemonFactory.createPokemon(pokemonString.get(i));
+            wildPokemon.add(PokemonFactory.createPokemon(pokemonString.get(i)));
         }
 
         // Gets player's pokemon of choice
-        StarterPokemon starterDialog = new StarterPokemon(screen, pokemon);
+        StarterPokemon starterDialog = new StarterPokemon(screen, wildPokemon);
         starterDialog.setVisible(true);
 
-        Pokemon chosenPokemon = starterDialog.getSelectedPokemon();
+        Pokemon playerChosen = starterDialog.getSelectedPokemon();
 
-        if (chosenPokemon == null) {
+        if (playerChosen == null) {
             System.exit(0);
         }
 
-        player.addPokemon(chosenPokemon);
-        player.changePokemon(chosenPokemon);
-        
+        wildPokemon.remove(playerChosen);
+        player.addPokemon(playerChosen);
+        player.changePokemon(playerChosen);
+
+        int rand = (int) (Math.random() * wildPokemon.size());
+        Pokemon botChosen = wildPokemon.get(rand);
+        wildPokemon.remove(botChosen);
+        bot.addPokemon(botChosen);
+        bot.changePokemon(botChosen); 
+
         JOptionPane.showMessageDialog(screen, "Escolha uma célula no tabuleiro para posicionar seu Pokémon.", "Posicionar Pokémon", JOptionPane.INFORMATION_MESSAGE);
-        board.letPlayerPlacePokemon(chosenPokemon, () -> {
+        board.letPlayerPlacePokemon(playerChosen, () -> {
+            board.letBotPlacePokemon(botChosen);
             startGameLoop();
         });
+
+
+        
     }
     
     private void startGameLoop() {

@@ -33,7 +33,8 @@ public class Cell extends JButton{
         this.pokemon = pokemon;
         this.isEmpty = (pokemon == null);
         if (pokemon != null) {
-            setIcon(pokemon.getImage());
+            setIcon(pokemon.getImage()); // ONLY FOR DEBUGGING
+            setDisabledIcon(pokemon.getImage());
         }
     }
 

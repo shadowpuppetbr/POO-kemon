@@ -3,6 +3,7 @@ package view;
 import game.Pokemon;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -12,7 +13,7 @@ public class StarterPokemon extends JDialog{
 
     private Pokemon selectedPokemon;
 
-    public StarterPokemon(Frame owner, Pokemon[] pokemon) {
+    public StarterPokemon(Frame owner, ArrayList<Pokemon> pokemon) {
         super(owner, "Escolha seu Pokémon Inicial", true);  // modal = true to pause program execution
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setSize(640, 400);

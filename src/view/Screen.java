@@ -19,7 +19,8 @@ public class Screen extends JFrame {
         setIconImage(icon.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new FlowLayout(FlowLayout.LEFT));
-
+        setResizable(false);
+        
         
         // LEFT board
         this.board.setPreferredSize(new Dimension(640, 640));

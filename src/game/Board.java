@@ -73,6 +73,7 @@ public class Board extends JPanel {
                 }
 
                 clickedCell.setPokemon(pokemon);
+                clickedCell.setEnabled(false);
                 
                 // Remove all listeners after placement
                 for(Cell[] cellLines: cells){
@@ -94,4 +95,18 @@ public class Board extends JPanel {
             }
         }
     }
+
+    public void letBotPlacePokemon(Pokemon pokemon) {
+        while (true) {
+            int row = (int) (Math.random() * BOARD_SIZE);
+            int col = (int) (Math.random() * BOARD_SIZE);
+            Cell cell = getCell(row, col);
+
+            if (cell.getRegionType() == pokemon.getType() && cell.isEmpty()) {
+                cell.setPokemon(pokemon);
+                break;
+            }
+        }
+    }
+
 }
