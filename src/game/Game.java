@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import javax.swing.JOptionPane;
 import view.Screen;
 import view.StarterPokemon;
@@ -15,6 +16,9 @@ public class Game {
     private final Player player;
     private final Bot bot;
     private ArrayList<Pokemon> wildPokemon;
+    private final Random random = new Random();
+    private static final String POKEMONS_FILE_PATH = "src/core/pokemons.txt";
+    private boolean isPlayerTurn = true;
 
     public Game() {
         // Initialize the game screen which contains the board
@@ -23,26 +27,26 @@ public class Game {
         this.player = new Player();
         this.bot = new Bot();
         this.wildPokemon = new ArrayList<>();
-        
-        
+        this.bot.setGame(this); // Dá ao bot uma referência ao jogo
     }
     
-    public void start(){ 
+    public void startNewGame(){ 
 
         // Inicializa a tela do jogo
         screen.initializeScreen();
 
         // Creates an array of the pokemon that will be used in the game
-        List<String> pokemonString = new ArrayList<>();
+        List<String> pokemonNames = null;
 
         try{
-            pokemonString = Files.readAllLines(Paths.get("src/core/pokemons.txt"));
+            pokemonNames = Files.readAllLines(Paths.get(POKEMONS_FILE_PATH));
         } catch(IOException e){
-            System.out.println("Arquivo com pokemons não foi possível ser lido");
+            JOptionPane.showMessageDialog(screen, "Não foi possível ler o arquivo de Pokémons: " + e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+            System.exit(1); // Exit if we can't load essential game data
         }
 
-        for(int i = 0; i < pokemonString.size(); i++) {
-            wildPokemon.add(PokemonFactory.createPokemon(pokemonString.get(i)));
+        for(String pokemonName : pokemonNames) {
+            wildPokemon.add(PokemonFactory.createPokemon(pokemonName));
         }
 
         // Gets player's pokemon of choice
@@ -59,7 +63,7 @@ public class Game {
         player.addPokemon(playerChosen);
         player.changePokemon(playerChosen);
 
-        int rand = (int) (Math.random() * wildPokemon.size());
+        int rand = random.nextInt(wildPokemon.size());
         Pokemon botChosen = wildPokemon.get(rand);
         wildPokemon.remove(botChosen);
         bot.addPokemon(botChosen);
@@ -70,24 +74,42 @@ public class Game {
             board.letBotPlacePokemon(botChosen);
             startGameLoop();
         });
-
-
-        
     }
     
     private void startGameLoop() {
-        System.out.println("jogo iniciado");
-        // TO DO
+        startPlayerTurn();
+
+        screen.getEndTurnButton().addActionListener(_ -> {
+            endPlayerTurn(); // Ends player's turn
+        });
+
     }
 
-    public void start(boolean fromSave){
-        if(fromSave == false){
-            this.start();
-            return;
-        }
+    private void startPlayerTurn() {
+        isPlayerTurn = true;
+        
+        screen.getChangePokemonButton().setEnabled(true);
+        screen.getExitButton().setEnabled(true);
+        screen.getEndTurnButton().setEnabled(true);
+    }
 
-        System.out.println("começando do save");
-        // TO DO
+    private void endPlayerTurn() {
+        isPlayerTurn = false;
+        screen.getChangePokemonButton().setEnabled(false);
+        screen.getExitButton().setEnabled(false);
+        screen.getEndTurnButton().setEnabled(false);
+
+        // Starts bot's turn in a thread
+        new Thread(bot).start();
+    }
+
+    public void endBotTurn() {
+        startPlayerTurn();
+    }
+
+    public void loadGame() {
+        // TODO
+        System.out.println("Carregando jogo salvo...");
     }
 
 

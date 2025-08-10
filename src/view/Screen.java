@@ -7,6 +7,10 @@ import javax.swing.*;
 public class Screen extends JFrame {
     private final Board board;
 
+    private JButton changePokemonButton;
+    private JButton exitButton;
+    private JButton endTurnButton;
+
     public Screen(Board board) {
         super();
         this.board = board;
@@ -48,11 +52,11 @@ public class Screen extends JFrame {
         // EAST botões de controle
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-        JButton attackButton = new JButton("Atacar");
-        JButton defendButton = new JButton("Defender");
-        JButton endTurnButton = new JButton("Finalizar Turno");
-        controlPanel.add(attackButton);
-        controlPanel.add(defendButton);
+        changePokemonButton = new JButton("Trocar Pokémon principal");
+        exitButton = new JButton("Sair do Jogo");
+        endTurnButton = new JButton("Finalizar Turno");
+        controlPanel.add(changePokemonButton);
+        controlPanel.add(exitButton);
         controlPanel.add(endTurnButton);
         controlPanel.setBackground(new Color(Color.YELLOW.getRGB()));
         
@@ -66,5 +70,17 @@ public class Screen extends JFrame {
 
     public Board getBoard() {
         return this.board;
+    }
+
+    public JButton getChangePokemonButton() {
+        return changePokemonButton;
+    }
+
+    public JButton getExitButton() {
+        return exitButton;
+    }
+
+    public JButton getEndTurnButton() {
+        return endTurnButton;
     }
 }

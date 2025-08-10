@@ -22,7 +22,7 @@ public class Menu extends JFrame {
         JButton exitButton = new JButton("Sair");
 
         playButton.addActionListener(_ -> {
-            new Game().start();
+            new Game().startNewGame();
             
             dispose();
         });
