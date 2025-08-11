@@ -32,5 +32,8 @@ public abstract class Trainer {
         }
     }
 
+    public ArrayList<Pokemon> getTeam(){
+        return this.team;
+    }
     
 }

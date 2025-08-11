@@ -60,8 +60,21 @@ public abstract class Pokemon {
         return this.name;
     }
 
+    public void setPokeState(PokeState state) {
+        this.state = state;
+    }
+    public PokeState getPokeState() {
+        return this.state;
+    }
+    
     public PokeType getType() {
         return this.type;
+    }
+
+    @Override
+    public String toString() {
+        return "Pokemon [hp=" + hp + ", level=" + level + ", experience=" + experience + ", type=" + type
+                + ", strength=" + strength + ", name=" + name + ", state=" + state + "]";
     }
 
     

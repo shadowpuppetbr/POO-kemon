@@ -8,9 +8,9 @@ import javax.swing.JButton;
 public class Cell extends JButton{
     private Pokemon pokemon;
     private final PokeType regionType;
-    private boolean isEmpty = true;
     private String message;
     private final Image[] tiles;
+    private boolean capturedFound;
 
     /*
     Célula vazia parâmetro: RegionType argumento
@@ -18,6 +18,7 @@ public class Cell extends JButton{
     public Cell(PokeType regionType) {
         super("");
         this.regionType = regionType;
+        this.capturedFound = false;
 
         this.tiles = new Image[4];
         this.tiles[0] = new ImageIcon("src/resources/images/tile_water.jpg").getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
@@ -31,7 +32,6 @@ public class Cell extends JButton{
 
     public void setPokemon(Pokemon pokemon) {
         this.pokemon = pokemon;
-        this.isEmpty = (pokemon == null);
         if (pokemon != null) {
             setIcon(pokemon.getImage()); // ONLY FOR DEBUGGING
             setDisabledIcon(pokemon.getImage());
@@ -90,7 +90,18 @@ public class Cell extends JButton{
     }
 
     public boolean isEmpty() {
-        return isEmpty;
+        return pokemon == null;
+    }
+
+    public boolean isFound() {
+        return capturedFound;
+    }
+
+    public void setFound(boolean found) {
+        this.capturedFound = found;
+        if(found){
+            setEnabled(false);
+        }
     }
 
 }

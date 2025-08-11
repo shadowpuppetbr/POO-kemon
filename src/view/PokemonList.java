@@ -9,12 +9,12 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-public class StarterPokemon extends JDialog{
+public class PokemonList extends JDialog{
 
     private Pokemon selectedPokemon;
 
-    public StarterPokemon(Frame owner, ArrayList<Pokemon> pokemon) {
-        super(owner, "Escolha seu Pokémon Inicial", true);  // modal = true to pause program execution
+    public PokemonList(Frame owner, ArrayList<Pokemon> pokemon, String title) {
+        super(owner, title, true);  // modal = true to pause program execution
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setSize(640, 400);
         setLocationRelativeTo(owner);

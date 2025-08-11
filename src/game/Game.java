@@ -1,5 +1,7 @@
 package game;
 
+import core.enums.PokeState;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -7,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.swing.JOptionPane;
+import view.PokemonList;
 import view.Screen;
-import view.StarterPokemon;
 
 public class Game {
     private final Board board;
@@ -48,7 +50,7 @@ public class Game {
         }
 
         // Gets player's pokemon of choice
-        StarterPokemon starterDialog = new StarterPokemon(screen, wildPokemon);
+        PokemonList starterDialog = new PokemonList(screen, wildPokemon, "Escolha seu Pokémon.");
         starterDialog.setVisible(true);
 
         Pokemon playerChosen = starterDialog.getSelectedPokemon();
@@ -56,22 +58,48 @@ public class Game {
         if (playerChosen == null) {
             System.exit(0);
         }
-
+        
         wildPokemon.remove(playerChosen);
+        playerChosen.setPokeState(PokeState.NORMAL);
         player.addPokemon(playerChosen);
         player.changePokemon(playerChosen);
 
         int rand = random.nextInt(wildPokemon.size());
         Pokemon botChosen = wildPokemon.get(rand);
         wildPokemon.remove(botChosen);
+        botChosen.setPokeState(PokeState.NORMAL);
         bot.addPokemon(botChosen);
         bot.changePokemon(botChosen); 
+
+
+        ActionListener cellsListener = e -> {
+            Cell clickedCell = (Cell) e.getSource();
+            if(clickedCell.isEmpty()){
+                JOptionPane.showMessageDialog(screen, "sobrou nada", "", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                if (clickedCell.getPokemon().getPokeState() == PokeState.WILD) {
+                    boolean captured = player.capturePokemon(clickedCell.getPokemon());
+                    if(captured){
+                        JOptionPane.showMessageDialog(screen, "Pokémon capturado", "", JOptionPane.INFORMATION_MESSAGE);
+                        clickedCell.setFound(true);
+                    } else{
+                        JOptionPane.showMessageDialog(screen, "Pokémon fugiu", "", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            }
+            board.disableCells();
+        };
 
         JOptionPane.showMessageDialog(screen, "Escolha uma célula no tabuleiro para posicionar seu Pokémon.", "Posicionar Pokémon", JOptionPane.INFORMATION_MESSAGE);
         board.letPlayerPlacePokemon(playerChosen, () -> {
             board.letBotPlacePokemon(botChosen);
+            board.addRandomPokemons(wildPokemon);
+            board.addActionListenerToCells(cellsListener);
             startGameLoop();
         });
+        
+
+        
     }
     
     private void startGameLoop() {
@@ -82,7 +110,12 @@ public class Game {
             endPlayerTurn(); // Ends player's turn
         });
         screen.getChangePokemonButton().addActionListener(_ -> {
-            // TODO
+            PokemonList changeList = new PokemonList(screen, player.getTeam(), "Escolha o novo Pokémon principal.");
+            changeList.setVisible(true);
+            Pokemon newMain = changeList.getSelectedPokemon();
+            if(newMain != null){
+                player.changePokemon(newMain);
+            }
         });
         screen.getExitButton().addActionListener(_ -> {
             System.exit(0);

@@ -4,6 +4,7 @@ import core.enums.PokeType;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class Board extends JPanel {
@@ -73,7 +74,7 @@ public class Board extends JPanel {
                 }
 
                 clickedCell.setPokemon(pokemon);
-                clickedCell.setEnabled(false);
+                clickedCell.setFound(true);
                 
                 // Remove all listeners after placement
                 for(Cell[] row: cells){
@@ -120,7 +121,31 @@ public class Board extends JPanel {
     public void enableCells() {
         for (Cell[] row : cells) {
             for (Cell cell : row) {
-                cell.setEnabled(true);
+                if(!cell.isFound()){
+                    cell.setEnabled(true);
+                }
+            }
+        }
+    }
+
+    public void addActionListenerToCells(ActionListener listener) {
+        for (Cell[] row : cells) {
+            for (Cell cell : row) {
+                cell.addActionListener(listener);
+            }
+        }
+    }
+
+    public void addRandomPokemons(ArrayList<Pokemon> wildPokemon) {
+        for (Pokemon pokemon : wildPokemon) {
+            while (true) {
+                int row = (int) (Math.random() * BOARD_SIZE);
+                int col = (int) (Math.random() * BOARD_SIZE);
+                Cell cell = getCell(row, col);
+                if (cell.getRegionType() == pokemon.getType() && cell.isEmpty()) {
+                    cell.setPokemon(pokemon);
+                    break;
+                }
             }
         }
     }
