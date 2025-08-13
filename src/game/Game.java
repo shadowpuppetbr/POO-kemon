@@ -1,5 +1,6 @@
 package game;
 
+import core.GameStarter;
 import core.enums.PokeState;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -76,16 +77,18 @@ public class Game {
             Cell clickedCell = (Cell) e.getSource();
             if(clickedCell.isEmpty()){
                 JOptionPane.showMessageDialog(screen, "sobrou nada", "", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                if (clickedCell.getPokemon().getPokeState() == PokeState.WILD) {
-                    boolean captured = player.capturePokemon(clickedCell.getPokemon());
-                    if(captured){
-                        JOptionPane.showMessageDialog(screen, "Pokémon capturado", "", JOptionPane.INFORMATION_MESSAGE);
-                        clickedCell.setFound(true);
-                    } else{
-                        JOptionPane.showMessageDialog(screen, "Pokémon fugiu", "", JOptionPane.WARNING_MESSAGE);
-                    }
+            } else if (clickedCell.getPokemon().getPokeState() == PokeState.WILD) { // Pokemon is wild, try to capture it
+                boolean captured = player.capturePokemon(clickedCell.getPokemon());
+                if(captured){
+                    JOptionPane.showMessageDialog(screen, "Pokémon capturado", "", JOptionPane.INFORMATION_MESSAGE);
+                    clickedCell.setFound(true);
+                    wildPokemon.remove(clickedCell.getPokemon());
+                } else{
+                    JOptionPane.showMessageDialog(screen, "Pokémon fugiu", "", JOptionPane.WARNING_MESSAGE);
                 }
+            } else if( clickedCell.getPokemon().getPokeState() == PokeState.NORMAL){
+                // TODO battle vs bot
+                
             }
             board.disableCells();
         };
@@ -118,7 +121,8 @@ public class Game {
             }
         });
         screen.getExitButton().addActionListener(_ -> {
-            System.exit(0);
+            screen.dispose();
+            GameStarter.main(null);
         });
 
     }
@@ -132,16 +136,29 @@ public class Game {
 
     private void endPlayerTurn() {
         screen.getChangePokemonButton().setEnabled(false);
-        screen.getExitButton().setEnabled(false);
         screen.getEndTurnButton().setEnabled(false);
         board.disableCells();
-
+        if(this.wildPokemon.isEmpty()){
+            endGame();
+            return;
+        }
+        screen.getExitButton().setEnabled(false);
         // Starts bot's turn in a thread
         new Thread(bot).start();
+
+
     }
 
     public void endBotTurn() {
         startPlayerTurn();
+    }
+
+    private void endGame(){
+        if(player.getScore() >= bot.getScore()){
+            JOptionPane.showMessageDialog(getScreen(), "Jogador venceu");
+        } else{
+            JOptionPane.showMessageDialog(getScreen(), "Bot venceu");
+        }
     }
 
     public void loadGame() {

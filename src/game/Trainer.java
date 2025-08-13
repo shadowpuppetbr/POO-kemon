@@ -25,6 +25,7 @@ public abstract class Trainer {
     
     protected boolean capturePokemon(Pokemon pokemon){
         if( new Random().nextBoolean() ){
+            addScore(1);
             team.add(pokemon);
             return true;
         } else{
@@ -34,6 +35,16 @@ public abstract class Trainer {
 
     public ArrayList<Pokemon> getTeam(){
         return this.team;
+    }
+
+    public int getScore(){
+        return this.score;
+    }
+
+    public void addScore(int val){
+        if(val > 0){
+            this.score += val;
+        }
     }
     
 }
