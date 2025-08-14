@@ -39,7 +39,7 @@ public abstract class Pokemon {
         }
     }
     
-   public void levelUp() {
+   public void increaseXp() {
        experience += 10;
         if(experience >= 100) {
             level++;
@@ -75,6 +75,14 @@ public abstract class Pokemon {
     public String toString() {
         return "Pokemon [hp=" + hp + ", level=" + level + ", experience=" + experience + ", type=" + type
                 + ", strength=" + strength + ", name=" + name + ", state=" + state + "]";
+    }
+
+    public int getHp() {
+        return hp;
+    }
+    public void resetHp() {
+        this.hp = 100;
+        this.state = PokeState.NORMAL;
     }
 
     
