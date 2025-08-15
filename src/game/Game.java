@@ -23,6 +23,7 @@ public class Game {
     private final ArrayList<Pokemon> wildPokemon;
     private final Random random = new Random();
     private static final String POKEMONS_FILE_PATH = "src/core/pokemons.txt";
+    private boolean botTurn = false;
 
     public Game() {
         // Initialize the game screen which contains the board
@@ -70,7 +71,7 @@ public class Game {
 
         int rand = random.nextInt(wildPokemon.size());
         Pokemon botChosen = wildPokemon.get(rand);
-        JOptionPane.showMessageDialog(screen, "Bot escolheu: " + botChosen.name, "", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(screen, "Bot escolheu: " + botChosen.name, "", JOptionPane.INFORMATION_MESSAGE);// TODO: make this only on debug mode
         wildPokemon.remove(botChosen);
         botChosen.setPokeState(PokeState.NORMAL);
         bot.addPokemon(botChosen);
@@ -143,7 +144,7 @@ public class Game {
             }
         });
 
-        overlay.getBtnRun().addActionListener(e -> {
+        overlay.getBtnRun().addActionListener(_ -> {
             JOptionPane.showMessageDialog(screen, "Você fugiu da batalha!", "Fuga", JOptionPane.INFORMATION_MESSAGE);
             overlay.setVisible(false);
             endPlayerTurn();
@@ -152,6 +153,7 @@ public class Game {
 
     private void startGameLoop() {
         bot.setGame(this);
+        new Thread(bot).start();
         startPlayerTurn();
 
         screen.getEndTurnButton().addActionListener(_ -> {
@@ -188,12 +190,13 @@ public class Game {
             return;
         }
         screen.getExitButton().setEnabled(false);
-        // Starts bot's turn in a thread
-        new Thread(bot).start();
+        // Let the bot take its turn
+        botTurn = true;
 
     }
 
     public void endBotTurn() {
+        botTurn = false;
         startPlayerTurn();
     }
 
@@ -212,6 +215,21 @@ public class Game {
 
     public Screen getScreen() {
         return screen;
+    }
+
+    public boolean isBotTurn() {
+        return botTurn;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+    public ArrayList<Pokemon> getWildPokemon() {
+        return wildPokemon;
+    }
+
+    public void botFightsPlayer() {
+        fight(player.mainPokemon, bot.mainPokemon);
     }
 
 }
