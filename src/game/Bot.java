@@ -66,21 +66,20 @@ public class Bot extends Trainer implements Runnable {
                                 JOptionPane.INFORMATION_MESSAGE);
                     }
                 } else if (cell.getPokemon().getPokeState() == PokeState.NORMAL) { // Pokemon is own by player, fight
-                                                                                   // with
-                                                                                   // him
+                                                                                   // with him
                     JOptionPane.showMessageDialog(screen, "Bot encontrou um Pokémon seu, iniciando batalha!", "",
                             JOptionPane.INFORMATION_MESSAGE);
                     game.botFightsPlayer();
 
                 }
 
-                // TODO: Bot's action
+                // TODO: enhance bot logic to choose cells more strategically,
+                // random makes chance of actual finding pokemon low
 
                 botTurnMsg.dispose();
 
                 game.endBotTurn();
-            }
-            else {
+            } else {
                 try {
                     Thread.sleep(500); // Sleep briefly to avoid busy-waiting
                 } catch (InterruptedException e) {
