@@ -44,7 +44,7 @@ public class Board extends JPanel {
                     regionType = bottomRightType;
                 }
 
-                cells[row][col] = new Cell(regionType);
+                cells[row][col] = new Cell(regionType, row, col);
                 add(cells[row][col]);
             }
         }
@@ -145,6 +145,41 @@ public class Board extends JPanel {
                 if (cell.getRegionType() == pokemon.getType() && cell.isEmpty()) {
                     cell.setPokemon(pokemon);
                     break;
+                }
+            }
+        }
+    }
+
+    public boolean hasPokemonInRowOrColumn(Cell cell) {
+        int row = cell.getCoordinates()[0];
+        int col = cell.getCoordinates()[1];
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            if (cells[row][i].getPokemon() != null) return true;
+        }
+        for(int i = 0; i < BOARD_SIZE; i++) {
+            if(cells[i][col].getPokemon() != null) return true;
+        }
+        return false;
+    }
+
+    public void debug(boolean bool){
+        if(bool){
+            for (int row = 0; row < BOARD_SIZE; row++) {
+                for (int col = 0; col < BOARD_SIZE; col++) {
+                    Cell cell = getCell(row, col);
+                    if (!cell.isEmpty()) {
+                        cell.setIcon(cell.getPokemon().getImage());
+                        cell.setDisabledIcon(cell.getPokemon().getImage());
+                    }
+                }
+            }
+            return;
+        }
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for(int col = 0; col < BOARD_SIZE; col++){
+                Cell cell = getCell(row, col);
+                if(!cell.isFound()){
+                    cell.setRegion();
                 }
             }
         }

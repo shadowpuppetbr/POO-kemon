@@ -1,10 +1,8 @@
 package view;
 
-import javax.swing.*;
-
 import game.Pokemon;
-
 import java.awt.*;
+import javax.swing.*;
 
 public class OverlayFight extends JPanel {
     private ImageIcon spritePlayer;
@@ -48,7 +46,7 @@ public class OverlayFight extends JPanel {
         parent.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentResized(java.awt.event.ComponentEvent e) {
-                ajustarLayout();
+                adjustLayout();
             }
         });
 
@@ -57,8 +55,7 @@ public class OverlayFight extends JPanel {
         setVisible(true);
     }
 
-    private void ajustarLayout() {
-        JFrame parent = this.parent;
+    private void adjustLayout() {
         int w = parent.getWidth();
         int h = parent.getHeight();
 
@@ -94,7 +91,7 @@ public class OverlayFight extends JPanel {
         if (spriteBot != null) {
             spriteBot.paintIcon(this, g2, w - spriteBot.getIconWidth() - 50, h / 2 - spriteBot.getIconHeight() / 2);
         }
-        ajustarLayout();
+        adjustLayout();
 
         g2.dispose();
     }
@@ -102,12 +99,12 @@ public class OverlayFight extends JPanel {
     // Método para atualizar HP
     public void setHpPlayer(int value) {
         hpPlayer.setValue(value);
-        ajustarLayout();
+        adjustLayout();
     }
 
     public void setHpBot(int value) {
         hpBot.setValue(value);
-        ajustarLayout();
+        adjustLayout();
     }
 
     public JButton getBtnAttack() {

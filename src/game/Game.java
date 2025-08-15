@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.swing.JOptionPane;
-
 import view.OverlayFight;
 import view.PokemonList;
 import view.Screen;
@@ -24,6 +23,9 @@ public class Game {
     private final Random random = new Random();
     private static final String POKEMONS_FILE_PATH = "src/core/pokemons.txt";
     private boolean botTurn = false;
+    private boolean hintMode = false;
+    private boolean debugMode = false;
+    private int hints;
 
     public Game() {
         // Initialize the game screen which contains the board
@@ -33,9 +35,10 @@ public class Game {
         this.bot = new Bot();
         this.wildPokemon = new ArrayList<>();
     }
-
+    
     public void startNewGame() {
-
+        
+        hints = 3;
         // Initializes screen
         screen.initializeScreen();
 
@@ -71,7 +74,6 @@ public class Game {
 
         int rand = random.nextInt(wildPokemon.size());
         Pokemon botChosen = wildPokemon.get(rand);
-        JOptionPane.showMessageDialog(screen, "Bot escolheu: " + botChosen.name, "", JOptionPane.INFORMATION_MESSAGE);// TODO: make this only on debug mode
         wildPokemon.remove(botChosen);
         botChosen.setPokeState(PokeState.NORMAL);
         bot.addPokemon(botChosen);
@@ -79,6 +81,13 @@ public class Game {
 
         ActionListener cellsListener = e -> {
             Cell clickedCell = (Cell) e.getSource();
+
+            if (hintMode) {
+                provideHint(clickedCell);
+                hintMode = false;
+                return; // Action doesn't waste turn
+            }
+
             if (clickedCell.isEmpty()) {
                 JOptionPane.showMessageDialog(screen, "sobrou nada", "", JOptionPane.INFORMATION_MESSAGE);
             } else if (clickedCell.getPokemon().getPokeState() == PokeState.WILD) { // Pokemon is wild, try to capture
@@ -90,10 +99,11 @@ public class Game {
                     wildPokemon.remove(clickedCell.getPokemon());
                 } else {
                     JOptionPane.showMessageDialog(screen, "Pokémon fugiu", "", JOptionPane.WARNING_MESSAGE);
+                    flee(clickedCell);
                 }
             } else if (clickedCell.getPokemon().getPokeState() == PokeState.NORMAL) { // Pokemon is own by bot, fight
                                                                                       // with him
-                fight(player.mainPokemon, bot.mainPokemon);
+                fight(player.getMainPokemon(), bot.getMainPokemon());
 
             }
             board.disableCells();
@@ -108,6 +118,40 @@ public class Game {
             startGameLoop();
         });
 
+    }
+
+    private void flee(Cell cell){
+        int coords[] = cell.getCoordinates();
+        int x = coords[0];
+        int y = coords[1];
+        int newX = -1, newY = -1;
+        
+        while ((newX < 0 || newY < 0) || (newX == x && newY == y) ||        // Is out of
+        (newX >= board.getBoardSize() || newY >= board.getBoardSize()) ||   // bounds
+        !board.getCell(newX, newY).isEmpty() ||                             // Is empty
+        board.getCell(newX, newY).getRegionType() != cell.getRegionType()){ // Wrong region
+            newX = x + random.nextInt(3) - 1; // Can set new row to above or below
+            newY = y + random.nextInt(3) - 1; // Can set new col to left or right
+        }
+        
+        Cell newCell = board.getCell(newX, newY);
+        newCell.setPokemon(cell.getPokemon());
+        if(debugMode){
+            newCell.setIcon(newCell.getPokemon().getImage());
+            newCell.setDisabledIcon(newCell.getPokemon().getImage());
+        }
+
+        cell.setFound(false);
+        cell.setPokemon(null);
+        
+    }
+
+    private void provideHint(Cell cell) {
+        if (board.hasPokemonInRowOrColumn(cell)) {
+            JOptionPane.showMessageDialog(screen, "Existe pelo menos um Pokémon nesta linha ou coluna!", "", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(screen, "Não há Pokémons nesta linha ou coluna.", "", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void fight(Pokemon playerPokemon, Pokemon botPokemon) {
@@ -156,9 +200,6 @@ public class Game {
         new Thread(bot).start();
         startPlayerTurn();
 
-        screen.getEndTurnButton().addActionListener(_ -> {
-            endPlayerTurn(); // Ends player's turn
-        });
         screen.getChangePokemonButton().addActionListener(_ -> {
             PokemonList changeList = new PokemonList(screen, player.getTeam(), "Escolha o novo Pokémon principal.");
             changeList.setVisible(true);
@@ -166,6 +207,27 @@ public class Game {
             if (newMain != null) {
                 player.changePokemon(newMain);
             }
+        });
+        
+        screen.getDebugButton().addActionListener(_ -> {
+            debugMode = debugMode == false; // invert debugMode
+
+            board.debug(debugMode);
+            if(debugMode){
+                JOptionPane.showMessageDialog(screen, "Bot escolheu: " + bot.getMainPokemon().getName(), "", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        screen.getHintButton().addActionListener(_ -> {
+            hintMode = true;
+            hints--;
+            JOptionPane.showMessageDialog(screen, "Modo Dica ativado. Clique em uma célula para verificar a linha e a coluna.", "Dica", JOptionPane.INFORMATION_MESSAGE);
+
+            if(hints <= 0){
+                screen.getHintButton().setEnabled(false);
+            }
+        });
+        screen.getEndTurnButton().addActionListener(_ -> {
+            endPlayerTurn(); // Ends player's turn
         });
         screen.getExitButton().addActionListener(_ -> {
             screen.dispose();
@@ -178,12 +240,14 @@ public class Game {
         screen.getChangePokemonButton().setEnabled(true);
         screen.getExitButton().setEnabled(true);
         screen.getEndTurnButton().setEnabled(true);
+        screen.getHintButton().setEnabled(true);
         board.enableCells();
     }
 
     private void endPlayerTurn() {
         screen.getChangePokemonButton().setEnabled(false);
         screen.getEndTurnButton().setEnabled(false);
+        screen.getHintButton().setEnabled(false);
         board.disableCells();
         if (this.wildPokemon.isEmpty()) {
             endGame();
@@ -229,7 +293,7 @@ public class Game {
     }
 
     public void botFightsPlayer() {
-        fight(player.mainPokemon, bot.mainPokemon);
+        fight(player.getMainPokemon(), bot.getMainPokemon());
     }
 
 }

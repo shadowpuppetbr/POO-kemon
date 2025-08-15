@@ -7,9 +7,11 @@ import javax.swing.*;
 public class Screen extends JFrame {
     private final Board board;
 
+    private JButton debugButton;
+    private JButton hintButton;
     private JButton changePokemonButton;
-    private JButton exitButton;
     private JButton endTurnButton;
+    private JButton exitButton;
 
     public Screen(Board board) {
         super();
@@ -34,7 +36,6 @@ public class Screen extends JFrame {
         add(boardWrapper);
 
         // RIGHT game info
-
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new GridLayout(3, 1, 10, 10));
         add(rightPanel);
@@ -52,12 +53,16 @@ public class Screen extends JFrame {
         // EAST botões de controle
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+        debugButton = new JButton("Debug");
+        hintButton = new JButton("Dica");
         changePokemonButton = new JButton("Trocar Pokémon principal");
-        exitButton = new JButton("Sair do Jogo");
         endTurnButton = new JButton("Finalizar Turno");
+        exitButton = new JButton("Sair do Jogo");
+        controlPanel.add(debugButton);
+        controlPanel.add(hintButton);
         controlPanel.add(changePokemonButton);
-        controlPanel.add(exitButton);
         controlPanel.add(endTurnButton);
+        controlPanel.add(exitButton);
         controlPanel.setBackground(new Color(Color.YELLOW.getRGB()));
         
         rightPanel.add(controlPanel);
@@ -70,6 +75,14 @@ public class Screen extends JFrame {
 
     public Board getBoard() {
         return this.board;
+    }
+
+    public JButton getDebugButton() {
+        return debugButton;
+    }
+
+    public JButton getHintButton(){
+        return hintButton;
     }
 
     public JButton getChangePokemonButton() {

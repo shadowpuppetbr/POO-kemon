@@ -11,14 +11,18 @@ public class Cell extends JButton{
     private String message;
     private final Image[] tiles;
     private boolean capturedFound;
+    private final int[] coordinates;
 
     /*
     Célula vazia parâmetro: RegionType argumento
     */
-    public Cell(PokeType regionType) {
+    public Cell(PokeType regionType, int x, int y) {
         super("");
         this.regionType = regionType;
         this.capturedFound = false;
+        this.coordinates = new int[2];
+        this.coordinates[0] = x;
+        this.coordinates[1] = y;
 
         this.tiles = new Image[4];
         this.tiles[0] = new ImageIcon("src/resources/images/tile_water.jpg").getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
@@ -32,10 +36,6 @@ public class Cell extends JButton{
 
     public void setPokemon(Pokemon pokemon) {
         this.pokemon = pokemon;
-        if (pokemon != null) {
-            setIcon(pokemon.getImage()); // ONLY FOR DEBUGGING
-            setDisabledIcon(pokemon.getImage());
-        }
     }
 
     public void setMessage(String message) {
@@ -46,7 +46,7 @@ public class Cell extends JButton{
     }
 
 
-    private void setRegion(){
+    public void setRegion(){
 
         switch (this.regionType) {
             case WATER -> {
@@ -89,6 +89,10 @@ public class Cell extends JButton{
         return regionType;
     }
 
+    public int[] getCoordinates(){
+        return coordinates;
+    }
+
     public boolean isEmpty() {
         return pokemon == null;
     }
@@ -101,6 +105,11 @@ public class Cell extends JButton{
         this.capturedFound = found;
         if(found){
             setEnabled(false);
+            setIcon(pokemon.getImage());
+            setDisabledIcon(pokemon.getImage());
+        } else{
+            setEnabled(true);
+            setRegion();
         }
     }
 

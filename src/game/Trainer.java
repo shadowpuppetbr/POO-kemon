@@ -5,7 +5,7 @@ import java.util.Random;
 
 public abstract class Trainer {
     protected ArrayList<Pokemon> team;
-    protected Pokemon mainPokemon;
+    private Pokemon mainPokemon;
     protected int score;
     
     public Trainer(){
@@ -40,11 +40,15 @@ public abstract class Trainer {
     public int getScore(){
         return this.score;
     }
+    public Pokemon getMainPokemon(){
+        return this.mainPokemon;
+    }
 
     public void addScore(int val){
         if(val > 0){
             this.score += val;
         }
     }
+
     
 }

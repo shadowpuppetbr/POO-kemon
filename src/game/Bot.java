@@ -1,11 +1,10 @@
 package game;
 
+import core.enums.PokeState;
 import java.awt.FlowLayout;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import core.enums.PokeState;
 import view.Screen;
 
 public class Bot extends Trainer implements Runnable {
