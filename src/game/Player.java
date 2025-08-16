@@ -1,6 +1,9 @@
 package game;
 
-public class Player extends Trainer {
+import java.io.Serializable;
+
+public class Player extends Trainer implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void chooseCell() {
@@ -14,7 +17,7 @@ public class Player extends Trainer {
         System.out.println(pokemon.type);
 
         for(int i = 0; i < 10; i++){
-           player.capturePokemon(pokemon);
+            player.capturePokemon(pokemon);
         }
         
         for(Pokemon poke: player.team){

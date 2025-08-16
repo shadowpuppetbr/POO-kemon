@@ -1,10 +1,12 @@
 package game;
 import core.enums.PokeState;
 import core.enums.PokeType;
+import java.io.Serializable;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
-public abstract class Pokemon {
+public abstract class Pokemon implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected int hp;
     protected int level;
     protected int experience;
@@ -12,7 +14,7 @@ public abstract class Pokemon {
     protected int strength;
     protected String name;
     protected PokeState state;
-    protected ImageIcon image;
+    protected transient ImageIcon image;
     protected static final Random random = new Random();
     
     public Pokemon(String name) {
@@ -90,6 +92,7 @@ public abstract class Pokemon {
 
 
 class ForestPokemon extends Pokemon{
+    private static final long serialVersionUID = 1L;
 
     public ForestPokemon(String name) {
         super(name);
@@ -109,6 +112,7 @@ class ForestPokemon extends Pokemon{
 
 
 class WaterPokemon extends Pokemon{
+    private static final long serialVersionUID = 1L;
 
     public WaterPokemon(String name) {
         super(name);
@@ -125,6 +129,7 @@ class WaterPokemon extends Pokemon{
 
 
 class GroundPokemon extends Pokemon{
+    private static final long serialVersionUID = 1L;
     private int turn;
 
     public GroundPokemon(String name) {
@@ -149,6 +154,7 @@ class GroundPokemon extends Pokemon{
 
 
 class ElectricPokemon extends Pokemon{
+    private static final long serialVersionUID = 1L;
 
     public ElectricPokemon(String name) {
         super(name);

@@ -50,6 +50,22 @@ public class Board extends JPanel {
         }
     }
 
+    public void updateBoardStateAfterLoading() {
+        removeAll();
+        setLayout(new GridLayout(BOARD_SIZE, BOARD_SIZE));
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                Cell cell = cells[row][col];
+                if (cell.isFound()) {
+                    cell.setEnabled(false);
+                }
+                add(cell);
+            }
+        }
+        revalidate();
+        repaint();
+    }
+
     public Cell getCell(int row, int col) {
         if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE) {
             return cells[row][col];
@@ -81,12 +97,10 @@ public class Board extends JPanel {
                     for(Cell cell: row){
                         cell.removeActionListener(this);
                     }
-
                 }
                 
                 // Callback
                 onPlacementComplete.run();
-            
             }
         };
 
@@ -184,5 +198,4 @@ public class Board extends JPanel {
             }
         }
     }
-    
 }

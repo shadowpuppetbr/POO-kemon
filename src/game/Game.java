@@ -4,6 +4,7 @@ import core.GameStarter;
 import core.enums.PokeState;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -14,9 +15,10 @@ import view.OverlayFight;
 import view.PokemonList;
 import view.Screen;
 
-public class Game {
+public class Game implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final Board board;
-    private final Screen screen;
+    private transient Screen screen;
     private final Player player;
     private final Bot bot;
     private final ArrayList<Pokemon> wildPokemon;
@@ -79,42 +81,12 @@ public class Game {
         bot.addPokemon(botChosen);
         bot.changePokemon(botChosen);
 
-        ActionListener cellsListener = e -> {
-            Cell clickedCell = (Cell) e.getSource();
-
-            if (hintMode) {
-                provideHint(clickedCell);
-                hintMode = false;
-                return; // Action doesn't waste turn
-            }
-
-            if (clickedCell.isEmpty()) {
-                JOptionPane.showMessageDialog(screen, "sobrou nada", "", JOptionPane.INFORMATION_MESSAGE);
-            } else if (clickedCell.getPokemon().getPokeState() == PokeState.WILD) { // Pokemon is wild, try to capture
-                                                                                    // it
-                boolean captured = player.capturePokemon(clickedCell.getPokemon());
-                if (captured) {
-                    JOptionPane.showMessageDialog(screen, "Pokémon capturado", "", JOptionPane.INFORMATION_MESSAGE);
-                    clickedCell.setFound(true);
-                    wildPokemon.remove(clickedCell.getPokemon());
-                } else {
-                    JOptionPane.showMessageDialog(screen, "Pokémon fugiu", "", JOptionPane.WARNING_MESSAGE);
-                    flee(clickedCell);
-                }
-            } else if (clickedCell.getPokemon().getPokeState() == PokeState.NORMAL) { // Pokemon is own by bot, fight
-                                                                                      // with him
-                fight(player.getMainPokemon(), bot.getMainPokemon());
-
-            }
-            board.disableCells();
-        };
-
         JOptionPane.showMessageDialog(screen, "Escolha uma célula no tabuleiro para posicionar seu Pokémon.",
                 "Posicionar Pokémon", JOptionPane.INFORMATION_MESSAGE);
         board.letPlayerPlacePokemon(playerChosen, () -> {
             board.letBotPlacePokemon(botChosen);
             board.addRandomPokemons(wildPokemon);
-            board.addActionListenerToCells(cellsListener);
+            setupActionListeners();
             startGameLoop();
         });
 
@@ -126,9 +98,9 @@ public class Game {
         int y = coords[1];
         int newX = -1, newY = -1;
         
-        while ((newX < 0 || newY < 0) || (newX == x && newY == y) ||        // Is out of
+        while ((newX < 0 || newY < 0) || (newX == x && newY == y) ||     // Is out of
         (newX >= board.getBoardSize() || newY >= board.getBoardSize()) ||   // bounds
-        !board.getCell(newX, newY).isEmpty() ||                             // Is empty
+        !board.getCell(newX, newY).isEmpty() ||                       // Is empty
         board.getCell(newX, newY).getRegionType() != cell.getRegionType()){ // Wrong region
             newX = x + random.nextInt(3) - 1; // Can set new row to above or below
             newY = y + random.nextInt(3) - 1; // Can set new col to left or right
@@ -195,10 +167,37 @@ public class Game {
         });
     }
 
-    private void startGameLoop() {
-        bot.setGame(this);
-        new Thread(bot).start();
-        startPlayerTurn();
+    private void setupActionListeners() {
+        ActionListener cellsListener = e -> {
+            Cell clickedCell = (Cell) e.getSource();
+
+            if (hintMode) {
+                provideHint(clickedCell);
+                hintMode = false;
+                return; // Action doesn't waste turn
+            }
+
+            if (clickedCell.isEmpty()) {
+                JOptionPane.showMessageDialog(screen, "sobrou nada", "", JOptionPane.INFORMATION_MESSAGE);
+            } else if (clickedCell.getPokemon().getPokeState() == PokeState.WILD) { // Pokemon is wild, try to capture
+                                                                                    // it
+                boolean captured = player.capturePokemon(clickedCell.getPokemon());
+                if (captured) {
+                    JOptionPane.showMessageDialog(screen, "Pokémon capturado", "", JOptionPane.INFORMATION_MESSAGE);
+                    clickedCell.setFound(true);
+                    wildPokemon.remove(clickedCell.getPokemon());
+                } else {
+                    JOptionPane.showMessageDialog(screen, "Pokémon fugiu", "", JOptionPane.WARNING_MESSAGE);
+                    flee(clickedCell);
+                }
+            } else if (clickedCell.getPokemon().getPokeState() == PokeState.NORMAL) { // Pokemon is own by bot, fight
+                                                                                    // with him
+                fight(player.getMainPokemon(), bot.getMainPokemon());
+
+            }
+            board.disableCells();
+        };
+        board.addActionListenerToCells(cellsListener);
 
         screen.getChangePokemonButton().addActionListener(_ -> {
             PokemonList changeList = new PokemonList(screen, player.getTeam(), "Escolha o novo Pokémon principal.");
@@ -210,7 +209,7 @@ public class Game {
         });
         
         screen.getDebugButton().addActionListener(_ -> {
-            debugMode = debugMode == false; // invert debugMode
+            debugMode = !debugMode; // invert debugMode
 
             board.debug(debugMode);
             if(debugMode){
@@ -233,9 +232,26 @@ public class Game {
             screen.dispose();
             GameStarter.main(null);
         });
-
+        
+        screen.getSaveButton().addActionListener(_ -> {
+            GameSave.saveGame(this);
+        });
     }
 
+    private void startGameLoop() {
+        bot.setGame(this);
+        new Thread(bot).start();
+        startPlayerTurn();
+    }
+
+    public void resumeGameAfterLoading() {
+        this.screen = new Screen(this.board);
+        this.screen.initializeScreen();
+        setupActionListeners();
+        this.board.updateBoardStateAfterLoading();
+        startGameLoop();
+    }
+    
     private void startPlayerTurn() {
         screen.getChangePokemonButton().setEnabled(true);
         screen.getExitButton().setEnabled(true);
@@ -264,17 +280,14 @@ public class Game {
         startPlayerTurn();
     }
 
+
+
     private void endGame() {
         if (player.getScore() >= bot.getScore()) {
             JOptionPane.showMessageDialog(getScreen(), "Jogador venceu");
         } else {
             JOptionPane.showMessageDialog(getScreen(), "Bot venceu");
         }
-    }
-
-    public void loadGame() {
-        // TODO
-        System.out.println("Carregando jogo salvo...");
     }
 
     public Screen getScreen() {
@@ -295,5 +308,4 @@ public class Game {
     public void botFightsPlayer() {
         fight(player.getMainPokemon(), bot.getMainPokemon());
     }
-
 }

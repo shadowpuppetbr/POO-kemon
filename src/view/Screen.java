@@ -11,6 +11,7 @@ public class Screen extends JFrame {
     private JButton hintButton;
     private JButton changePokemonButton;
     private JButton endTurnButton;
+    private JButton saveButton; // Botão adicionado
     private JButton exitButton;
 
     public Screen(Board board) {
@@ -57,11 +58,13 @@ public class Screen extends JFrame {
         hintButton = new JButton("Dica");
         changePokemonButton = new JButton("Trocar Pokémon principal");
         endTurnButton = new JButton("Finalizar Turno");
+        saveButton = new JButton("Salvar Jogo"); // Botão criado
         exitButton = new JButton("Sair do Jogo");
         controlPanel.add(debugButton);
         controlPanel.add(hintButton);
         controlPanel.add(changePokemonButton);
         controlPanel.add(endTurnButton);
+        controlPanel.add(saveButton); // Botão adicionado ao painel
         controlPanel.add(exitButton);
         controlPanel.setBackground(new Color(Color.YELLOW.getRGB()));
         
@@ -95,5 +98,9 @@ public class Screen extends JFrame {
 
     public JButton getEndTurnButton() {
         return endTurnButton;
+    }
+
+    public JButton getSaveButton() { // Getter para o novo botão
+        return saveButton;
     }
 }

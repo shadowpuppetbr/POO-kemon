@@ -2,14 +2,16 @@ package game;
 
 import core.enums.PokeType;
 import java.awt.*;
+import java.io.Serializable;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class Cell extends JButton{
+public class Cell extends JButton implements Serializable{
+    private static final long serialVersionUID = 1L;
     private Pokemon pokemon;
     private final PokeType regionType;
     private String message;
-    private final Image[] tiles;
+    private transient final Image[] tiles;
     private boolean capturedFound;
     private final int[] coordinates;
 

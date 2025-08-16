@@ -2,13 +2,15 @@ package game;
 
 import core.enums.PokeState;
 import java.awt.FlowLayout;
+import java.io.Serializable;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import view.Screen;
 
-public class Bot extends Trainer implements Runnable {
-    private Game game;
+public class Bot extends Trainer implements Runnable, Serializable {
+    private static final long serialVersionUID = 1L;
+    private transient Game game;
     private volatile boolean running = false;
 
     public void setGame(Game game) {

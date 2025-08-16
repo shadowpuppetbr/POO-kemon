@@ -1,6 +1,7 @@
 package view;
 
 import game.Game;
+import game.GameSave;
 import java.awt.*;
 import javax.swing.*;
 
@@ -17,7 +18,6 @@ public class Menu extends JFrame {
 
         // Menu buttons
         JButton playButton = new JButton("Jogar");
-        JButton saveButton = new JButton("Salvar Jogo");
         JButton loadButton = new JButton("Carregar Jogo");
         JButton exitButton = new JButton("Sair");
 
@@ -26,13 +26,13 @@ public class Menu extends JFrame {
             
             dispose();
         });
-
-        saveButton.addActionListener(_ -> {
-            JOptionPane.showMessageDialog(Menu.this, "jogo salvo");
-        });
         
         loadButton.addActionListener(_ -> {
-            JOptionPane.showMessageDialog(Menu.this, "jogo carregado");
+            Game loadedGame = GameSave.loadGame();
+            if (loadedGame != null) {
+                loadedGame.resumeGameAfterLoading();
+                dispose();
+            }
         });
 
         exitButton.addActionListener(_ -> System.exit(0));
@@ -40,7 +40,7 @@ public class Menu extends JFrame {
         // Main panel: NORTH -> Image | CENTER -> Buttons
         JPanel mainPanel = new JPanel(new BorderLayout(10, 20));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-  
+ 
         Image menuImage = new ImageIcon("src/resources/images/2ihuz31s.png").getImage();
         JLabel menuImageLabel = new JLabel(new ImageIcon(menuImage.getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
 
@@ -48,9 +48,8 @@ public class Menu extends JFrame {
 
         // Panel for the buttons (CENTER)
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(4, 1, 10, 10)); // 4 botões
+        buttonPanel.setLayout(new GridLayout(3, 1, 10, 10)); // 3 botões
         buttonPanel.add(playButton);
-        buttonPanel.add(saveButton);
         buttonPanel.add(loadButton);
         buttonPanel.add(exitButton);
         mainPanel.add(buttonPanel, BorderLayout.CENTER);

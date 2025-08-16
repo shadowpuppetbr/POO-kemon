@@ -1,9 +1,11 @@
 package game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Trainer {
+public abstract class Trainer implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected ArrayList<Pokemon> team;
     private Pokemon mainPokemon;
     protected int score;
