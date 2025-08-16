@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
-public abstract class Pokemon implements Serializable {
+public abstract class Pokemon implements Serializable, Attack{
     private static final long serialVersionUID = 1L;
     protected int hp;
     protected int level;
@@ -26,8 +26,7 @@ public abstract class Pokemon implements Serializable {
         this.state = PokeState.WILD;
         
     }
-    
-    public abstract int attack();
+
     public void takeDamage(int value, PokeType region){
         if( region == PokeType.WATER){
             this.hp -= value;
@@ -98,6 +97,7 @@ class ForestPokemon extends Pokemon{
         super(name);
         this.type = PokeType.FOREST;
     }
+
     @Override
     public int attack(){
         int damage = (random.nextInt(10) + this.strength)* this.level;
