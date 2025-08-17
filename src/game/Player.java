@@ -1,8 +1,6 @@
 package game;
 
-import java.io.Serializable;
-
-public class Player extends Trainer implements Serializable {
+public class Player extends Trainer {
     private static final long serialVersionUID = 1L;
     
     

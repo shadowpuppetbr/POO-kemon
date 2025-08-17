@@ -85,7 +85,8 @@ public class Board extends JPanel {
                 Cell clickedCell = (Cell) e.getSource();
 
                 if(clickedCell.getRegionType() != pokemon.getType()) {
-                    JOptionPane.showMessageDialog(null, "Região do tipo " + clickedCell.getRegionType() + " incompatível com pokémon tipo " + pokemon.getType() + ".","Erro de Posicionamento", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Região do tipo " + clickedCell.getRegionType() + 
+                    " incompatível com pokémon tipo " + pokemon.getType() + ".","Erro de Posicionamento", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
