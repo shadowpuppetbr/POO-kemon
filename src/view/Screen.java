@@ -1,6 +1,7 @@
 package view;
 
 import game.Board;
+import game.Pokemon;
 import java.awt.*;
 import javax.swing.*;
 
@@ -11,8 +12,15 @@ public class Screen extends JFrame {
     private JButton hintButton;
     private JButton changePokemonButton;
     private JButton endTurnButton;
-    private JButton saveButton; // Botão adicionado
+    private JButton saveButton;
     private JButton exitButton;
+    private JLabel scoreLabel;
+    private JPanel infoPanel;
+    private JLabel mainPokemonImg;
+    private JPanel mainPokemonPanel;
+    private JLabel mainPokemonTxt;
+
+
 
     public Screen(Board board) {
         super();
@@ -21,13 +29,14 @@ public class Screen extends JFrame {
 
     public void initializeScreen() {
         setTitle("POOkemon");
+        setSize(960,720);
 
         Image icon = new ImageIcon("src/resources/images/pokeball.png").getImage();
         setIconImage(icon.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setResizable(false);
-        
+    
         
         // LEFT board
         this.board.setPreferredSize(new Dimension(640, 640));
@@ -38,40 +47,54 @@ public class Screen extends JFrame {
 
         // RIGHT game info
         JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        rightPanel.setPreferredSize(new Dimension(260, 640));
+        rightPanel.setLayout(new GridLayout(2, 1, 10, 0));
         add(rightPanel);
 
-
-        JPanel infoPanel = new JPanel(new FlowLayout());
-        JLabel scoreLabel = new JLabel("Placar: 0");
-        JLabel roundLabel = new JLabel("Rodada: 1");
+        // Info
+        infoPanel = new JPanel(new GridLayout(2, 1));
+        scoreLabel = new JLabel("Placar: 0");
+        scoreLabel.setSize(100, 50);
+        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 26));
         infoPanel.add(scoreLabel);
-        infoPanel.add(roundLabel);
-        infoPanel.setBackground(new Color(Color.GREEN.getRGB()));
+
+        mainPokemonPanel = new JPanel();
+        mainPokemonPanel.setLayout(new GridLayout(1,2));
+
+        mainPokemonImg = new JLabel(new ImageIcon());
+        mainPokemonImg.setHorizontalAlignment(SwingConstants.LEFT);
+        mainPokemonPanel.add(mainPokemonImg);
+
+        mainPokemonTxt = new JLabel();
+        mainPokemonTxt.setFont(new Font("Arial", Font.BOLD, 18));
+        mainPokemonTxt.setHorizontalAlignment(SwingConstants.CENTER);
+        mainPokemonPanel.add(mainPokemonTxt);
+
+        infoPanel.add(mainPokemonPanel);
+
 
         rightPanel.add(infoPanel);
 
-        // EAST botões de controle
+        // Control Buttons
         JPanel controlPanel = new JPanel();
-        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+        controlPanel.setLayout(new GridLayout(6, 1, 10, 10));
         debugButton = new JButton("Debug");
         hintButton = new JButton("Dica");
-        changePokemonButton = new JButton("Trocar Pokémon principal");
+        changePokemonButton = new JButton("Ver Time");
         endTurnButton = new JButton("Finalizar Turno");
-        saveButton = new JButton("Salvar Jogo"); // Botão criado
+        saveButton = new JButton("Salvar Jogo");
         exitButton = new JButton("Sair do Jogo");
         controlPanel.add(debugButton);
         controlPanel.add(hintButton);
         controlPanel.add(changePokemonButton);
         controlPanel.add(endTurnButton);
-        controlPanel.add(saveButton); // Botão adicionado ao painel
+        controlPanel.add(saveButton);
         controlPanel.add(exitButton);
-        controlPanel.setBackground(new Color(Color.YELLOW.getRGB()));
         
         rightPanel.add(controlPanel);
 
-        // Set the window size
-        setSize(960,720);
+
         setLocationRelativeTo(null); // Center the window
         setVisible(true);
     }
@@ -102,5 +125,18 @@ public class Screen extends JFrame {
 
     public JButton getSaveButton() { // Getter para o novo botão
         return saveButton;
+    }
+
+    public void updateScore(int score){
+        String msg = "Placar: " + score;
+        scoreLabel.setText(msg);
+    }
+
+    public void updateMainPokemon(Pokemon pokemon) {
+        ImageIcon icon = pokemon.getImage();
+        icon = new ImageIcon(icon.getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+        mainPokemonImg.setIcon(icon);
+        mainPokemonTxt.setText("<html>" + pokemon.getName() + "<br/>Vida: " + pokemon.getHp() + "<br/>Nível: " + pokemon.getLevel() + "</html>");
+        repaint();
     }
 }

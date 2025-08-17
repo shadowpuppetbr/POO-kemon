@@ -88,6 +88,7 @@ public class Game implements Serializable {
             board.letBotPlacePokemon(botChosen);
             board.addRandomPokemons(wildPokemon);
             setupActionListeners();
+            screen.updateMainPokemon(playerChosen);
             startGameLoop();
         });
 
@@ -225,6 +226,7 @@ public class Game implements Serializable {
             Pokemon newMain = changeList.getSelectedPokemon();
             if (newMain != null) {
                 player.changePokemon(newMain);
+                screen.updateMainPokemon(newMain);
             }
         });
         
@@ -273,14 +275,19 @@ public class Game implements Serializable {
     }
     
     private void startPlayerTurn() {
+        screen.getDebugButton().setEnabled(true);
+        screen.getSaveButton().setEnabled(true);
         screen.getChangePokemonButton().setEnabled(true);
         screen.getExitButton().setEnabled(true);
         screen.getEndTurnButton().setEnabled(true);
-        screen.getHintButton().setEnabled(true);
+        if( hints > 0 ) screen.getHintButton().setEnabled(true);
         board.enableCells();
     }
 
     private void endPlayerTurn() {
+        screen.updateScore(player.getScore());
+        screen.getDebugButton().setEnabled(false);
+        screen.getSaveButton().setEnabled(false);
         screen.getChangePokemonButton().setEnabled(false);
         screen.getEndTurnButton().setEnabled(false);
         screen.getHintButton().setEnabled(false);

@@ -85,6 +85,10 @@ public abstract class Pokemon implements Serializable, Attack{
         this.hp = 100;
         this.state = PokeState.NORMAL;
     }
+
+    public int getLevel() {
+        return this.level;
+    }
    
 
     
