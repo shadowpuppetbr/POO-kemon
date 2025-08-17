@@ -15,7 +15,6 @@ public abstract class Trainer implements Serializable {
         this.score = 0;
     }
     
-    protected abstract void chooseCell();
     
     protected void changePokemon(Pokemon pokemon){
         this.mainPokemon = pokemon;

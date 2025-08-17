@@ -1,7 +1,7 @@
 package view;
 
+import core.GameSave;
 import game.Game;
-import game.GameSave;
 import java.awt.*;
 import javax.swing.*;
 

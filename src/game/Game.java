@@ -1,5 +1,6 @@
 package game;
 
+import core.GameSave;
 import core.GameStarter;
 import core.enums.PokeState;
 import java.awt.event.ActionListener;

@@ -17,10 +17,6 @@ public class Bot extends Trainer implements Runnable, Serializable {
         this.game = game;
     }
 
-    @Override
-    protected void chooseCell() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     @Override
     public void run() {
