@@ -85,6 +85,7 @@ public abstract class Pokemon implements Serializable, Attack{
         this.hp = 100;
         this.state = PokeState.NORMAL;
     }
+   
 
     
 }
@@ -147,6 +148,9 @@ class GroundPokemon extends Pokemon{
             damage = (random.nextInt(10) + this.strength)* this.level;
         }
         return damage;
+    }
+    public void resetTurn(){
+        this.turn = 0;
     }
     
     

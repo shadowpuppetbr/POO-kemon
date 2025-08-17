@@ -4,11 +4,6 @@ import java.io.Serializable;
 
 public class Player extends Trainer implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    @Override
-    protected void chooseCell() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
     
     
     public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package game;
 
+import core.GameSave;
 import core.GameStarter;
 import core.enums.PokeState;
 import java.awt.event.ActionListener;
@@ -143,6 +144,13 @@ public class Game implements Serializable {
                 playerPokemon.resetHp();
                 botPokemon.resetHp();
                 playerPokemon.increaseXp();
+                if (playerPokemon instanceof GroundPokemon) {
+                    ((GroundPokemon) playerPokemon).resetTurn();
+                }
+                if (botPokemon instanceof GroundPokemon) {
+                    ((GroundPokemon) playerPokemon).resetTurn();
+                }
+    
                 endPlayerTurn();
                 return;
             }
@@ -156,6 +164,12 @@ public class Game implements Serializable {
                 JOptionPane.showMessageDialog(screen, "Você perdeu a batalha!", "Derrota",
                         JOptionPane.INFORMATION_MESSAGE);
                 overlay.setVisible(false);
+                if (playerPokemon instanceof GroundPokemon) {
+                    ((GroundPokemon) playerPokemon).resetTurn();
+                }
+                if (botPokemon instanceof GroundPokemon) {
+                    ((GroundPokemon) playerPokemon).resetTurn();
+                }
                 endPlayerTurn();
             }
         });
@@ -163,6 +177,12 @@ public class Game implements Serializable {
         overlay.getBtnRun().addActionListener(_ -> {
             JOptionPane.showMessageDialog(screen, "Você fugiu da batalha!", "Fuga", JOptionPane.INFORMATION_MESSAGE);
             overlay.setVisible(false);
+            if (playerPokemon instanceof GroundPokemon) {
+                ((GroundPokemon) playerPokemon).resetTurn();
+            }
+            if (botPokemon instanceof GroundPokemon) {
+                ((GroundPokemon) playerPokemon).resetTurn();
+            }
             endPlayerTurn();
         });
     }
