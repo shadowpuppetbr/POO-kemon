@@ -10,6 +10,7 @@ public abstract class Pokemon implements Serializable, Attack{
     protected int hp;
     protected int level;
     protected int experience;
+    private int expThreshold;
     protected PokeType type;
     protected int strength;
     protected String name;
@@ -22,6 +23,7 @@ public abstract class Pokemon implements Serializable, Attack{
         this.strength = 10;
         this.level = 1;
         this.experience = 0;
+        this.expThreshold = 100;
         this.hp = 100;
         this.state = PokeState.WILD;
         
@@ -41,11 +43,12 @@ public abstract class Pokemon implements Serializable, Attack{
     }
     
    public void increaseXp() {
-       experience += 10;
-        if(experience >= 100) {
+       experience += 100;
+        if(experience >= expThreshold) {
             level++;
             experience = 0;
             strength += 5;
+            expThreshold += 50;
         }
     }
 

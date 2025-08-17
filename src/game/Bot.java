@@ -32,7 +32,7 @@ public class Bot extends Trainer implements Runnable {
                 botTurnMsg.setLocationRelativeTo(screen);
                 botTurnMsg.setLayout(new FlowLayout());
                 botTurnMsg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                botTurnMsg.add(new JLabel("let bro cook..."));
+                botTurnMsg.add(new JLabel("Bot está pensando..."));
                 botTurnMsg.setVisible(true);
 
                 try {
@@ -68,9 +68,6 @@ public class Bot extends Trainer implements Runnable {
                     game.botFightsPlayer();
 
                 }
-
-                // TODO: enhance bot logic to choose cells more strategically,
-                // random makes chance of actual finding pokemon low
 
                 botTurnMsg.dispose();
 
