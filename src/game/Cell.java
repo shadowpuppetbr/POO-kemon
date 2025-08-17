@@ -2,11 +2,10 @@ package game;
 
 import core.enums.PokeType;
 import java.awt.*;
-import java.io.Serializable;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class Cell extends JButton implements Serializable{
+public final class Cell extends JButton{
     private static final long serialVersionUID = 1L;
     private Pokemon pokemon;
     private final PokeType regionType;

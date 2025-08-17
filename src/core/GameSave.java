@@ -1,5 +1,6 @@
 package core;
 
+import game.Game;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -33,7 +34,6 @@ public class GameSave {
                 out.writeObject(game);
                 JOptionPane.showMessageDialog(null, "Jogo salvo com sucesso!");
             } catch (IOException i) {
-                i.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Erro ao salvar o jogo.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -54,7 +54,6 @@ public class GameSave {
                 JOptionPane.showMessageDialog(null, "Jogo carregado com sucesso!");
                 return game;
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Erro ao carregar o jogo.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
