@@ -1,5 +1,6 @@
 package game;
 
+import core.InvalidRegionException;
 import core.enums.PokeType;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -83,25 +84,30 @@ public class Board extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Cell clickedCell = (Cell) e.getSource();
+                try{
+                    if(clickedCell.getRegionType() != pokemon.getType()) {
+                        throw new InvalidRegionException();
+                    }
+    
+                    clickedCell.setPokemon(pokemon);
+                    clickedCell.setFound(true);
+                    
+                    // Remove all listeners after placement
+                    for(Cell[] row: cells){
+                        for(Cell cell: row){
+                            cell.removeActionListener(this);
+                        }
+                    }
+                    
+                    // Callback
+                    onPlacementComplete.run();
 
-                if(clickedCell.getRegionType() != pokemon.getType()) {
+                } catch (InvalidRegionException ex){
                     JOptionPane.showMessageDialog(null, "Região do tipo " + clickedCell.getRegionType() + 
                     " incompatível com pokémon tipo " + pokemon.getType() + ".","Erro de Posicionamento", JOptionPane.ERROR_MESSAGE);
-                    return;
+                    
                 }
 
-                clickedCell.setPokemon(pokemon);
-                clickedCell.setFound(true);
-                
-                // Remove all listeners after placement
-                for(Cell[] row: cells){
-                    for(Cell cell: row){
-                        cell.removeActionListener(this);
-                    }
-                }
-                
-                // Callback
-                onPlacementComplete.run();
             }
         };
 
@@ -118,10 +124,17 @@ public class Board extends JPanel {
             int col = (int) (Math.random() * BOARD_SIZE);
             Cell cell = getCell(row, col);
 
-            if (cell.getRegionType() == pokemon.getType() && cell.isEmpty()) {
-                cell.setPokemon(pokemon);
-                break;
+            try{
+                if (cell.getRegionType() != pokemon.getType()) throw new InvalidRegionException();
+
+                if (cell.isEmpty()) {
+                    cell.setPokemon(pokemon);
+                    break;
+                }
+
+            } catch (InvalidRegionException ex){
             }
+
         }
     }
 

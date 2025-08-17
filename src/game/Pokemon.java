@@ -142,7 +142,7 @@ class GroundPokemon extends Pokemon{
         this.turn++;
         int damage;
         if(this.turn % 2 == 1){
-            damage = (random.nextInt(10) + (2 * this.strength))* this.level;
+            damage = (random.nextInt(10) * 2 + this.strength)* this.level;
         }
         else{
             damage = (random.nextInt(10) + this.strength)* this.level;
