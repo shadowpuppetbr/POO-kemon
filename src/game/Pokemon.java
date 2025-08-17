@@ -174,8 +174,10 @@ class ElectricPokemon extends Pokemon{
         return damage;
     }
 
-    public boolean paralyze(){
-        return random.nextInt(10) < 4;
+    public void paralyze(Pokemon enemyPokemon){
+        if (random.nextInt(5) == 1){ // 1/4 chance
+            enemyPokemon.setPokeState(PokeState.STUNNED);
+        }
     }
 
     
