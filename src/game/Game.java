@@ -82,8 +82,21 @@ public class Game implements Serializable {
         bot.addPokemon(botChosen);
         bot.changePokemon(botChosen);
 
-        JOptionPane.showMessageDialog(screen, "Escolha uma célula no tabuleiro para posicionar seu Pokémon.",
+        
+        Object[] options = {"Escolher Posição", "Posição Aleatória"};
+        int choice = JOptionPane.showOptionDialog(screen,
+            "Como você deseja posicionar seu Pokémon inicial?",
+            "Posicionar Pokémon",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[0]);
+
+    if (choice == 0) {
+        JOptionPane.showMessageDialog(screen, "Clique em uma célula válida no tabuleiro.",
                 "Posicionar Pokémon", JOptionPane.INFORMATION_MESSAGE);
+    
         board.letPlayerPlacePokemon(playerChosen, () -> {
             board.letBotPlacePokemon(botChosen);
             board.addRandomPokemons(wildPokemon);
@@ -91,6 +104,15 @@ public class Game implements Serializable {
             screen.updateMainPokemon(playerChosen);
             startGameLoop();
         });
+    } 
+
+    else {
+        board.letPlayerPlacePokemonRandomly(playerChosen);
+        board.letBotPlacePokemon(botChosen);
+        board.addRandomPokemons(wildPokemon);
+        setupActionListeners();
+        startGameLoop();
+    }
 
     }
 
@@ -128,17 +150,35 @@ public class Game implements Serializable {
         }
     }
 
-    private void fight(Pokemon playerPokemon, Pokemon botPokemon) {
-        OverlayFight overlay = new OverlayFight(screen, playerPokemon, botPokemon);
-        overlay.setVisible(true);
+    /**
+     * @param playerPokemon Pokémon do player
+     * @param botPokemon    Pokémon do bot
+     * @param allowRun      true se quem iniciou pode fugir, false se não pode
+     */
+    private void fight(Pokemon playerPokemon, Pokemon botPokemon, boolean allowRun) {
+    // Mensagem de turno inicial
+    
+    OverlayFight overlay = new OverlayFight(screen, playerPokemon, botPokemon);
+    overlay.setVisible(true);
+        overlay.showTurnMessage("Turno do Jogador", 1200);
+
+        // Só o player pode fugir (quem iniciou a batalha)
+        // Só permite fugir se allowRun for true
+        overlay.getBtnRun().setEnabled(allowRun);
 
         overlay.getBtnAttack().addActionListener(_ -> {
+            // Desabilita o botão de ataque e de fugir durante a animação/ataque
+            overlay.getBtnAttack().setEnabled(false);
+            if (allowRun)
+                overlay.getBtnRun().setEnabled(false);
             // Turno do jogador
+            overlay.animateAttackPlayer();
             int danoJogador = playerPokemon.attack();
             botPokemon.takeDamage(danoJogador, playerPokemon.getType());
             overlay.setHpBot(botPokemon.getHp());
-
-            if (botPokemon.getHp() <= 0) {
+            overlay.flashBot();
+            
+            if (botPokemon.getHp() <= 0) { // jogador venceu
                 JOptionPane.showMessageDialog(screen, "Você venceu a batalha!", "Vitória",
                         JOptionPane.INFORMATION_MESSAGE);
                 overlay.setVisible(false);
@@ -151,31 +191,48 @@ public class Game implements Serializable {
                 if (botPokemon instanceof GroundPokemon) {
                     ((GroundPokemon) playerPokemon).resetTurn();
                 }
-    
+
                 endPlayerTurn();
                 return;
             }
+            overlay.showTurnMessage("Turno do Computador", 1000);
+            // Delay para ataque do bot
+            new javax.swing.Timer(1500, evt -> {
+                overlay.animateAttackBot();
+                int danoBot = botPokemon.attack();
+                playerPokemon.takeDamage(danoBot, botPokemon.getType());
+                overlay.setHpPlayer(playerPokemon.getHp());
+                overlay.flashPlayer();
 
-            // Turno do bot
-            int danoBot = botPokemon.attack();
-            playerPokemon.takeDamage(danoBot, botPokemon.getType());
-            overlay.setHpPlayer(playerPokemon.getHp());
+                if (playerPokemon.getHp() <= 0) {
+                    JOptionPane.showMessageDialog(screen, "Você perdeu a batalha!", "Derrota",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    overlay.setVisible(false);
+                    if (playerPokemon instanceof GroundPokemon) {
+                        ((GroundPokemon) playerPokemon).resetTurn();
+                    }
+                    if (botPokemon instanceof GroundPokemon) {
+                        ((GroundPokemon) playerPokemon).resetTurn();
+                    }
+                    endPlayerTurn();
+                } else {
+                    // Reabilita o botão de ataque após o ataque do bot
+                    overlay.getBtnAttack().setEnabled(true);
+                    // Só o player pode fugir, então reabilita apenas se for o turno dele
+                    // Só reabilita o botão de fugir se permitido
+                    if (allowRun)
+                        overlay.getBtnRun().setEnabled(true);
+                }
+                ((javax.swing.Timer) evt.getSource()).stop();
+                overlay.showTurnMessage("Turno do Jogador", 1000);
+            }).start();
+            
 
-            if (playerPokemon.getHp() <= 0) {
-                JOptionPane.showMessageDialog(screen, "Você perdeu a batalha!", "Derrota",
-                        JOptionPane.INFORMATION_MESSAGE);
-                overlay.setVisible(false);
-                if (playerPokemon instanceof GroundPokemon) {
-                    ((GroundPokemon) playerPokemon).resetTurn();
-                }
-                if (botPokemon instanceof GroundPokemon) {
-                    ((GroundPokemon) playerPokemon).resetTurn();
-                }
-                endPlayerTurn();
-            }
         });
 
         overlay.getBtnRun().addActionListener(_ -> {
+            if (!allowRun)
+                return;
             JOptionPane.showMessageDialog(screen, "Você fugiu da batalha!", "Fuga", JOptionPane.INFORMATION_MESSAGE);
             overlay.setVisible(false);
             if (playerPokemon instanceof GroundPokemon) {
@@ -213,7 +270,9 @@ public class Game implements Serializable {
                 }
             } else if (clickedCell.getPokemon().getPokeState() == PokeState.NORMAL) { // Pokemon is own by bot, fight
                                                                                     // with him
-                fight(player.getMainPokemon(), bot.getMainPokemon());
+        // Player iniciou a batalha
+                // Player iniciou a batalha, pode fugir
+                fight(player.getMainPokemon(), bot.getMainPokemon(), true);
 
             }
             board.disableCells();
@@ -333,6 +392,8 @@ public class Game implements Serializable {
     }
 
     public void botFightsPlayer() {
-        fight(player.getMainPokemon(), bot.getMainPokemon());
+    // Bot iniciou a batalha
+    // Bot iniciou a batalha, player NÃO pode fugir
+    fight(player.getMainPokemon(), bot.getMainPokemon(), false);
     }
 }

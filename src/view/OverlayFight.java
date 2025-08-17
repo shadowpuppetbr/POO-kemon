@@ -5,6 +5,18 @@ import java.awt.*;
 import javax.swing.*;
 
 public class OverlayFight extends JPanel {
+    // Mensagem temporária de turno
+    private String turnMessage = null;
+    private Timer turnMessageTimer;
+    // Variáveis de animação
+    private int playerOffsetX = 0;
+    private int botOffsetX = 0;
+    private boolean playerFlash = false;
+    private boolean botFlash = false;
+    private Timer playerAttackTimer;
+    private Timer botAttackTimer;
+    private Timer playerFlashTimer;
+    private Timer botFlashTimer;
     private ImageIcon spritePlayer;
     private ImageIcon spriteBot;
     private JProgressBar hpPlayer;
@@ -14,9 +26,16 @@ public class OverlayFight extends JPanel {
     private JFrame parent;
 
     public OverlayFight(JFrame parent, Pokemon playerPokemon, Pokemon botPokemon) {
+        turnMessageTimer = null;
         this.parent = parent;
         this.spritePlayer = playerPokemon.getImage();
         this.spriteBot = botPokemon.getImage();
+
+        // Inicializa timers como null
+        playerAttackTimer = null;
+        botAttackTimer = null;
+        playerFlashTimer = null;
+        botFlashTimer = null;
 
         setOpaque(false); // Transparente
 
@@ -84,16 +103,60 @@ public class OverlayFight extends JPanel {
         g2.setColor(new Color(0, 0, 0, 200));
         g2.fillRect(0, h / 2 - 100, w, 200);
 
-        // Sprites
+        // Sprites com animação de movimento
+        int playerX = 50 + playerOffsetX;
+        int botX = w - spriteBot.getIconWidth() - 50 - botOffsetX;
+        int playerY = h / 2 - spritePlayer.getIconHeight() / 2;
+        int botY = h / 2 - spriteBot.getIconHeight() / 2;
+
+        // Piscar branco se necessário
         if (spritePlayer != null) {
-            spritePlayer.paintIcon(this, g2, 50, h / 2 - spritePlayer.getIconHeight() / 2);
+            if (playerFlash) {
+                g2.setColor(Color.WHITE);
+                g2.fillRect(playerX, playerY, spritePlayer.getIconWidth(), spritePlayer.getIconHeight());
+            }
+            spritePlayer.paintIcon(this, g2, playerX, playerY);
         }
         if (spriteBot != null) {
-            spriteBot.paintIcon(this, g2, w - spriteBot.getIconWidth() - 50, h / 2 - spriteBot.getIconHeight() / 2);
+            if (botFlash) {
+                g2.setColor(Color.WHITE);
+                g2.fillRect(botX, botY, spriteBot.getIconWidth(), spriteBot.getIconHeight());
+            }
+            spriteBot.paintIcon(this, g2, botX, botY);
         }
         adjustLayout();
 
         g2.dispose();
+
+        // Desenhar mensagem de turno, se houver
+        if (turnMessage != null) {
+            Graphics2D gMsg = (Graphics2D) g.create();
+            gMsg.setFont(new Font("Arial", Font.BOLD, 32));
+            FontMetrics fm = gMsg.getFontMetrics();
+            int msgWidth = fm.stringWidth(turnMessage);
+            int x = (getWidth() - msgWidth) / 2;
+            int y = 80;
+            gMsg.setColor(new Color(255, 255, 0, 220));
+            gMsg.drawString(turnMessage, x, y);
+            gMsg.dispose();
+        }
+    }
+
+    /**
+     * Exibe uma mensagem de turno temporária na tela
+     * @param msg texto a ser exibido
+     * @param millis duração em milissegundos
+     */
+    public void showTurnMessage(String msg, int millis) {
+        this.turnMessage = msg;
+        repaint();
+        if (turnMessageTimer != null && turnMessageTimer.isRunning()) turnMessageTimer.stop();
+        turnMessageTimer = new Timer(millis, e -> {
+            turnMessage = null;
+            repaint();
+        });
+        turnMessageTimer.setRepeats(false);
+        turnMessageTimer.start();
     }
 
     // Método para atualizar HP
@@ -113,5 +176,85 @@ public class OverlayFight extends JPanel {
 
     public JButton getBtnRun() {
         return btnRun;
+    }
+
+    // Animação de ataque do player
+    public void animateAttackPlayer() {
+        if (playerAttackTimer != null && playerAttackTimer.isRunning()) playerAttackTimer.stop();
+        playerOffsetX = 0;
+        playerAttackTimer = new Timer(15, null);
+        playerAttackTimer.addActionListener(e -> {
+            playerOffsetX += 10;
+            if (playerOffsetX >= 60) {
+                playerAttackTimer.stop();
+                // Volta para posição original
+                Timer backTimer = new Timer(15, null);
+                backTimer.addActionListener(ev -> {
+                    playerOffsetX -= 10;
+                    if (playerOffsetX <= 0) {
+                        playerOffsetX = 0;
+                        backTimer.stop();
+                    }
+                    repaint();
+                });
+                backTimer.start();
+            }
+            repaint();
+        });
+        playerAttackTimer.start();
+    }
+
+    // Animação de ataque do bot
+    public void animateAttackBot() {
+        if (botAttackTimer != null && botAttackTimer.isRunning()) botAttackTimer.stop();
+        botOffsetX = 0;
+        botAttackTimer = new Timer(15, null);
+        botAttackTimer.addActionListener(e -> {
+            botOffsetX += 10;
+            if (botOffsetX >= 60) {
+                botAttackTimer.stop();
+                // Volta para posição original
+                Timer backTimer = new Timer(15, null);
+                backTimer.addActionListener(ev -> {
+                    botOffsetX -= 10;
+                    if (botOffsetX <= 0) {
+                        botOffsetX = 0;
+                        backTimer.stop();
+                    }
+                    repaint();
+                });
+                backTimer.start();
+            }
+            repaint();
+        });
+        botAttackTimer.start();
+    }
+
+    // Piscar branco no player
+    public void flashPlayer() {
+        if (playerFlashTimer != null && playerFlashTimer.isRunning()) playerFlashTimer.stop();
+        playerFlash = true;
+        repaint();
+        playerFlashTimer = new Timer(60, null);
+        playerFlashTimer.setRepeats(false);
+        playerFlashTimer.addActionListener(e -> {
+            playerFlash = false;
+            repaint();
+        });
+        playerFlashTimer.start();
+    }
+
+    // Piscar branco no bot
+    public void flashBot() {
+        if (botFlashTimer != null && botFlashTimer.isRunning()) botFlashTimer.stop();
+        botFlash = true;
+        repaint();
+        botFlashTimer = new Timer(60, null);
+        botFlashTimer.setRepeats(false);
+        botFlashTimer.addActionListener(e -> {
+            botFlash = false;
+            repaint();
+        });
+        botFlashTimer.start();
     }
 }

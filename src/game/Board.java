@@ -118,6 +118,21 @@ public class Board extends JPanel {
         }
     }
 
+    public void letPlayerPlacePokemonRandomly(Pokemon pokemon) {
+        while (true) {
+            int row = (int) (Math.random() * getBoardSize());
+            int col = (int) (Math.random() * getBoardSize());
+            Cell cell = getCell(row, col);
+
+       
+            if (cell.getRegionType() == pokemon.getType() && cell.isEmpty()) {
+                cell.setPokemon(pokemon);
+                cell.setFound(true); 
+                break; 
+            }
+        }
+    }
+
     public void letBotPlacePokemon(Pokemon pokemon) {
         while (true) {
             int row = (int) (Math.random() * BOARD_SIZE);
