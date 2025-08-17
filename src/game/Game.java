@@ -94,8 +94,6 @@ public class Game implements Serializable {
             options[0]);
 
     if (choice == 0) {
-        JOptionPane.showMessageDialog(screen, "Clique em uma célula válida no tabuleiro.",
-                "Posicionar Pokémon", JOptionPane.INFORMATION_MESSAGE);
     
         board.letPlayerPlacePokemon(playerChosen, () -> {
             board.letBotPlacePokemon(botChosen);
@@ -107,10 +105,11 @@ public class Game implements Serializable {
     } 
 
     else {
-        board.letPlayerPlacePokemonRandomly(playerChosen);
+        board.PlacePlayerPokemonRandomly(playerChosen);
         board.letBotPlacePokemon(botChosen);
         board.addRandomPokemons(wildPokemon);
         setupActionListeners();
+        screen.updateMainPokemon(playerChosen);
         startGameLoop();
     }
 
@@ -345,6 +344,7 @@ public class Game implements Serializable {
 
     private void endPlayerTurn() {
         screen.updateScore(player.getScore());
+        screen.updateMainPokemon(player.getMainPokemon());
         screen.getDebugButton().setEnabled(false);
         screen.getSaveButton().setEnabled(false);
         screen.getChangePokemonButton().setEnabled(false);

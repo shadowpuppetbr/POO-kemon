@@ -28,8 +28,8 @@ public class OverlayFight extends JPanel {
     public OverlayFight(JFrame parent, Pokemon playerPokemon, Pokemon botPokemon) {
         turnMessageTimer = null;
         this.parent = parent;
-        this.spritePlayer = playerPokemon.getImage();
-        this.spriteBot = botPokemon.getImage();
+        this.spritePlayer = new ImageIcon(playerPokemon.getImage().getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+        this.spriteBot = new ImageIcon(botPokemon.getImage().getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
 
         // Inicializa timers como null
         playerAttackTimer = null;

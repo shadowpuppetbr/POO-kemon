@@ -118,7 +118,7 @@ public class Board extends JPanel {
         }
     }
 
-    public void letPlayerPlacePokemonRandomly(Pokemon pokemon) {
+    public void PlacePlayerPokemonRandomly(Pokemon pokemon) {
         while (true) {
             int row = (int) (Math.random() * getBoardSize());
             int col = (int) (Math.random() * getBoardSize());
