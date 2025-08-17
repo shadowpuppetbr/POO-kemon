@@ -82,14 +82,36 @@ public class Game implements Serializable {
         bot.addPokemon(botChosen);
         bot.changePokemon(botChosen);
 
-        JOptionPane.showMessageDialog(screen, "Escolha uma célula no tabuleiro para posicionar seu Pokémon.",
+        
+        Object[] options = {"Escolher Posição", "Posição Aleatória"};
+        int choice = JOptionPane.showOptionDialog(screen,
+            "Como você deseja posicionar seu Pokémon inicial?",
+            "Posicionar Pokémon",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[0]);
+
+    if (choice == 0) {
+        JOptionPane.showMessageDialog(screen, "Clique em uma célula válida no tabuleiro.",
                 "Posicionar Pokémon", JOptionPane.INFORMATION_MESSAGE);
+    
         board.letPlayerPlacePokemon(playerChosen, () -> {
             board.letBotPlacePokemon(botChosen);
             board.addRandomPokemons(wildPokemon);
             setupActionListeners();
             startGameLoop();
         });
+    } 
+
+    else {
+        board.letPlayerPlacePokemonRandomly(playerChosen);
+        board.letBotPlacePokemon(botChosen);
+        board.addRandomPokemons(wildPokemon);
+        setupActionListeners();
+        startGameLoop();
+    }
 
     }
 
