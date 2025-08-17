@@ -5,6 +5,10 @@ import java.awt.*;
 import javax.swing.*;
 
 public class OverlayFight extends JPanel {
+    // Dano temporário
+    private Integer damageValue = null;
+    private boolean damageOnPlayer = false;
+    private Timer damageTimer;
     // Mensagem temporária de turno
     private String turnMessage = null;
     private Timer turnMessageTimer;
@@ -26,6 +30,7 @@ public class OverlayFight extends JPanel {
     private JFrame parent;
 
     public OverlayFight(JFrame parent, Pokemon playerPokemon, Pokemon botPokemon) {
+    damageTimer = null;
         turnMessageTimer = null;
         this.parent = parent;
         this.spritePlayer = new ImageIcon(playerPokemon.getImage().getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
@@ -42,15 +47,17 @@ public class OverlayFight extends JPanel {
         // Layout absoluto para posicionamento manual
         setLayout(null);
 
-        // HP Player
-        hpPlayer = new JProgressBar(0, 100);
-        hpPlayer.setValue(playerPokemon.getHp());
-        hpPlayer.setStringPainted(true);
+    // HP Player
+    hpPlayer = new JProgressBar(0, playerPokemon.getHp());
+    hpPlayer.setValue(playerPokemon.getHp());
+    hpPlayer.setStringPainted(true);
+    hpPlayer.setString(playerPokemon.getHp() + " HP");
 
-        // HP Bot
-        hpBot = new JProgressBar(0, 100);
-        hpBot.setValue(botPokemon.getHp());
-        hpBot.setStringPainted(true);
+    // HP Bot
+    hpBot = new JProgressBar(0, botPokemon.getHp());
+    hpBot.setValue(botPokemon.getHp());
+    hpBot.setStringPainted(true);
+    hpBot.setString(botPokemon.getHp() + " HP");
 
         // Botões
         btnAttack = new JButton("Atacar");
@@ -131,7 +138,7 @@ public class OverlayFight extends JPanel {
         // Desenhar mensagem de turno, se houver
         if (turnMessage != null) {
             Graphics2D gMsg = (Graphics2D) g.create();
-            gMsg.setFont(new Font("Arial", Font.BOLD, 32));
+            gMsg.setFont(new Font("Arial", Font.BOLD, 24));
             FontMetrics fm = gMsg.getFontMetrics();
             int msgWidth = fm.stringWidth(turnMessage);
             int x = (getWidth() - msgWidth) / 2;
@@ -140,7 +147,47 @@ public class OverlayFight extends JPanel {
             gMsg.drawString(turnMessage, x, y);
             gMsg.dispose();
         }
+
+        // Desenhar valor de dano, se houver
+        if (damageValue != null) {
+            Graphics2D gDmg = (Graphics2D) g.create();
+            gDmg.setFont(new Font("Arial", Font.BOLD, 58));
+            gDmg.setColor(new Color(255, 50, 50, 230));
+            String dmgStr = "-" + damageValue;
+            int x, y;
+            w = getWidth();
+            h = getHeight();
+            if (!damageOnPlayer) {
+                // Próximo ao player
+                x = 50 + playerOffsetX + 10;
+                y = h / 2 - spritePlayer.getIconHeight() / 2 - 10;
+            } else {
+                // Próximo ao bot
+                x = w - spriteBot.getIconWidth() - 50 + 10;
+                y = h / 2 - spriteBot.getIconHeight() / 2 - 10;
+            }
+            gDmg.drawString(dmgStr, x, y);
+            gDmg.dispose();
+        }
     }
+    /**
+     * Exibe o valor do dano próximo ao Pokémon atingido
+     * @param value valor do dano
+     * @param isPlayer true para mostrar no player, false para mostrar no bot
+     */
+    public void showDamage(int value, boolean isPlayer) {
+        this.damageValue = value;
+        this.damageOnPlayer = isPlayer;
+        repaint();
+        if (damageTimer != null && damageTimer.isRunning()) damageTimer.stop();
+        damageTimer = new Timer(900, e -> {
+            damageValue = null;
+            repaint();
+        });
+        damageTimer.setRepeats(false);
+        damageTimer.start();
+    }
+    
 
     /**
      * Exibe uma mensagem de turno temporária na tela
@@ -161,13 +208,15 @@ public class OverlayFight extends JPanel {
 
     // Método para atualizar HP
     public void setHpPlayer(int value) {
-        hpPlayer.setValue(value);
-        adjustLayout();
+    hpPlayer.setValue(value);
+    hpPlayer.setString(value + " HP");
+    adjustLayout();
     }
 
     public void setHpBot(int value) {
-        hpBot.setValue(value);
-        adjustLayout();
+    hpBot.setValue(value);
+    hpBot.setString(value + " HP");
+    adjustLayout();
     }
 
     public JButton getBtnAttack() {

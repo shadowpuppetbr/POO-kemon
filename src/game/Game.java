@@ -173,6 +173,7 @@ public class Game implements Serializable {
             // Turno do jogador
             overlay.animateAttackPlayer();
             int danoJogador = playerPokemon.attack();
+            overlay.showDamage(danoJogador, true);
             botPokemon.takeDamage(danoJogador, playerPokemon.getType());
             overlay.setHpBot(botPokemon.getHp());
             overlay.flashBot();
@@ -199,6 +200,7 @@ public class Game implements Serializable {
             new javax.swing.Timer(1500, evt -> {
                 overlay.animateAttackBot();
                 int danoBot = botPokemon.attack();
+                overlay.showDamage(danoJogador, false);
                 playerPokemon.takeDamage(danoBot, botPokemon.getType());
                 overlay.setHpPlayer(playerPokemon.getHp());
                 overlay.flashPlayer();
@@ -232,15 +234,21 @@ public class Game implements Serializable {
         overlay.getBtnRun().addActionListener(_ -> {
             if (!allowRun)
                 return;
-            JOptionPane.showMessageDialog(screen, "Você fugiu da batalha!", "Fuga", JOptionPane.INFORMATION_MESSAGE);
-            overlay.setVisible(false);
-            if (playerPokemon instanceof GroundPokemon) {
-                ((GroundPokemon) playerPokemon).resetTurn();
+            
+            Random random = new Random();
+            if (random.nextInt(100) < 70) {
+                JOptionPane.showMessageDialog(screen, "Você fugiu da batalha!", "Fuga", JOptionPane.INFORMATION_MESSAGE);
+                overlay.setVisible(false);
+                if (playerPokemon instanceof GroundPokemon) {
+                    ((GroundPokemon) playerPokemon).resetTurn();
+                }
+                if (botPokemon instanceof GroundPokemon) {
+                    ((GroundPokemon) playerPokemon).resetTurn();
+                }
+                endPlayerTurn();
+            } else {
+                JOptionPane.showMessageDialog(screen, "Você não conseguiu fugir!", "Falha", JOptionPane.INFORMATION_MESSAGE);
             }
-            if (botPokemon instanceof GroundPokemon) {
-                ((GroundPokemon) playerPokemon).resetTurn();
-            }
-            endPlayerTurn();
         });
     }
 
@@ -267,12 +275,12 @@ public class Game implements Serializable {
                     JOptionPane.showMessageDialog(screen, "Pokémon fugiu", "", JOptionPane.WARNING_MESSAGE);
                     flee(clickedCell);
                 }
-            } else if (clickedCell.getPokemon().getPokeState() == PokeState.NORMAL) { // Pokemon is own by bot, fight
-                                                                                    // with him
-        // Player iniciou a batalha
+            } else if (clickedCell.getPokemon().getPokeState() == PokeState.NORMAL) { 
+                // Pokemon is own by bot, fight with him
+                // Player iniciou a batalha
                 // Player iniciou a batalha, pode fugir
-                fight(player.getMainPokemon(), bot.getMainPokemon(), true);
-
+                fight(player.getMainPokemon(), clickedCell.getPokemon(), true);
+                clickedCell.setFound(true);
             }
             board.disableCells();
         };
