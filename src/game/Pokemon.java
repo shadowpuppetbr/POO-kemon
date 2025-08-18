@@ -29,16 +29,11 @@ public abstract class Pokemon implements Serializable, Attack{
         
     }
 
-    public void takeDamage(int value, PokeType region){
-        if( region == PokeType.WATER){
-            this.hp -= value;
-        }
-        else{
-            this.hp -= (value * 0.7);
-        }
+    public void takeDamage(int value){
+        this.hp -= value;
+        
         if(this.hp <= 0){
             this.hp = 0;
-            this.state = PokeState.DISABLED;
         }
     }
     
@@ -130,6 +125,11 @@ class WaterPokemon extends Pokemon{
     public int attack(){
         int damage = (random.nextInt(10) + this.strength)* this.level;
         return damage;
+    }
+
+    @Override
+    public void takeDamage(int value){
+        super.takeDamage((int) (value * 0.7));
     }
     
     

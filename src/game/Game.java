@@ -174,7 +174,7 @@ public class Game implements Serializable {
             overlay.animateAttackPlayer();
             int danoJogador = playerPokemon.attack();
             overlay.showDamage(danoJogador, true);
-            botPokemon.takeDamage(danoJogador, playerPokemon.getType());
+            botPokemon.takeDamage(danoJogador);
             overlay.setHpBot(botPokemon.getHp());
             overlay.flashBot();
             
@@ -191,7 +191,7 @@ public class Game implements Serializable {
                 if (botPokemon instanceof GroundPokemon) {
                     ((GroundPokemon) playerPokemon).resetTurn();
                 }
-
+                player.addScore(1);
                 endPlayerTurn();
                 return;
             }
@@ -201,7 +201,7 @@ public class Game implements Serializable {
                 overlay.animateAttackBot();
                 int danoBot = botPokemon.attack();
                 overlay.showDamage(danoJogador, false);
-                playerPokemon.takeDamage(danoBot, botPokemon.getType());
+                playerPokemon.takeDamage(danoBot);
                 overlay.setHpPlayer(playerPokemon.getHp());
                 overlay.flashPlayer();
 
@@ -215,6 +215,7 @@ public class Game implements Serializable {
                     if (botPokemon instanceof GroundPokemon) {
                         ((GroundPokemon) playerPokemon).resetTurn();
                     }
+                    bot.addScore(1);
                     endPlayerTurn();
                 } else {
                     // Reabilita o botão de ataque após o ataque do bot
@@ -283,6 +284,7 @@ public class Game implements Serializable {
                 clickedCell.setFound(true);
             }
             board.disableCells();
+            screen.updateScore(player.getScore());
         };
         board.addActionListenerToCells(cellsListener);
 
