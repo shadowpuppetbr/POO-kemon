@@ -177,7 +177,7 @@ public class Game implements Serializable {
             } else {
                 overlay.animateAttackPlayer();
                 int danoJogador = playerPokemon.attack();
-                if (playerPokemon instanceof ElectricPokemon && random.nextInt(5) == 1) { // 1/4 chance
+                if (playerPokemon instanceof ElectricPokemon && random.nextInt(5) <= 2) { // 20%
                     JOptionPane.showMessageDialog(screen, "Você paralizou o computador!", "Tzzzzz",
                             JOptionPane.INFORMATION_MESSAGE);
                     botPokemon.setPokeState(PokeState.STUNNED);
@@ -215,7 +215,7 @@ public class Game implements Serializable {
                 } else {
                     overlay.animateAttackBot();
                     int danoBot = botPokemon.attack();
-                    if (botPokemon instanceof ElectricPokemon && random.nextInt(5) == 1) { // 1/4 chance
+                    if (botPokemon instanceof ElectricPokemon && random.nextInt(5) <= 2) { // 20% chance
                         JOptionPane.showMessageDialog(screen, "Bot te paralizou!", "Tzzzzz",
                                 JOptionPane.INFORMATION_MESSAGE);
                         playerPokemon.setPokeState(PokeState.STUNNED);
@@ -289,7 +289,7 @@ public class Game implements Serializable {
             }
 
             if (clickedCell.isEmpty()) {
-                JOptionPane.showMessageDialog(screen, "sobrou nada", "", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(screen, "Célula vazia", "", JOptionPane.INFORMATION_MESSAGE);
             } else if (clickedCell.getPokemon().getPokeState() == PokeState.WILD) { // Pokemon is wild, try to capture
                                                                                     // it
                 boolean captured = player.capturePokemon(clickedCell.getPokemon());
