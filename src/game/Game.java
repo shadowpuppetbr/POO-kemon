@@ -178,7 +178,8 @@ public class Game implements Serializable {
                 overlay.animateAttackPlayer();
                 int danoJogador = playerPokemon.attack();
                 if (playerPokemon instanceof ElectricPokemon && random.nextInt(5) == 1) { // 1/4 chance
-                    overlay.showTurnMessage("Você paralizou o computador", 1000);
+                    JOptionPane.showMessageDialog(screen, "Você paralizou o computador!", "Tzzzzz",
+                            JOptionPane.INFORMATION_MESSAGE);
                     botPokemon.setPokeState(PokeState.STUNNED);
                 }
                 overlay.showDamage(danoJogador, true);
@@ -199,7 +200,7 @@ public class Game implements Serializable {
                     if (botPokemon instanceof GroundPokemon) {
                         ((GroundPokemon) playerPokemon).resetTurn();
                     }
-                player.addScore(1);
+                    player.addScore(1);
                     endPlayerTurn();
                     return;
                 }
@@ -215,7 +216,8 @@ public class Game implements Serializable {
                     overlay.animateAttackBot();
                     int danoBot = botPokemon.attack();
                     if (botPokemon instanceof ElectricPokemon && random.nextInt(5) == 1) { // 1/4 chance
-                        overlay.showTurnMessage("Bot te paralizou", 1000);
+                        JOptionPane.showMessageDialog(screen, "Bot te paralizou!", "Tzzzzz",
+                                JOptionPane.INFORMATION_MESSAGE);
                         playerPokemon.setPokeState(PokeState.STUNNED);
                     }
                     overlay.showDamage(danoBot, false);
@@ -233,7 +235,7 @@ public class Game implements Serializable {
                         if (botPokemon instanceof GroundPokemon) {
                             ((GroundPokemon) playerPokemon).resetTurn();
                         }
-                    bot.addScore(1);
+                        bot.addScore(1);
                         endPlayerTurn();
                     }
                 }
@@ -268,8 +270,10 @@ public class Game implements Serializable {
                 }
                 endPlayerTurn();
             } else {
+                overlay.getBtnRun().setEnabled(false);
                 JOptionPane.showMessageDialog(screen, "Você não conseguiu fugir!", "Falha",
                         JOptionPane.INFORMATION_MESSAGE);
+
             }
         });
     }
