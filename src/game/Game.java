@@ -289,7 +289,7 @@ public class Game implements Serializable {
             }
 
             if (clickedCell.isEmpty()) {
-                JOptionPane.showMessageDialog(screen, "sobrou nada", "", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(screen, "Célula vazia", "", JOptionPane.INFORMATION_MESSAGE);
             } else if (clickedCell.getPokemon().getPokeState() == PokeState.WILD) { // Pokemon is wild, try to capture
                                                                                     // it
                 boolean captured = player.capturePokemon(clickedCell.getPokemon());
