@@ -104,7 +104,7 @@ class ForestPokemon extends Pokemon{
     @Override
     public int attack(){
         int damage = (random.nextInt(10) + this.strength)* this.level;
-        this.hp = (int)(damage * 0.1);
+        this.hp = (int)(damage * 0.2);
         if(this.hp > 100){
             this.hp = 100;
         }
