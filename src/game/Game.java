@@ -177,7 +177,7 @@ public class Game implements Serializable {
             } else {
                 overlay.animateAttackPlayer();
                 int danoJogador = playerPokemon.attack();
-                if (playerPokemon instanceof ElectricPokemon && random.nextInt(5) == 1) { // 1/4 chance
+                if (playerPokemon instanceof ElectricPokemon && random.nextInt(5) <= 2) { // 20%
                     JOptionPane.showMessageDialog(screen, "Você paralizou o computador!", "Tzzzzz",
                             JOptionPane.INFORMATION_MESSAGE);
                     botPokemon.setPokeState(PokeState.STUNNED);
@@ -215,7 +215,7 @@ public class Game implements Serializable {
                 } else {
                     overlay.animateAttackBot();
                     int danoBot = botPokemon.attack();
-                    if (botPokemon instanceof ElectricPokemon && random.nextInt(5) == 1) { // 1/4 chance
+                    if (botPokemon instanceof ElectricPokemon && random.nextInt(5) <= 2) { // 20% chance
                         JOptionPane.showMessageDialog(screen, "Bot te paralizou!", "Tzzzzz",
                                 JOptionPane.INFORMATION_MESSAGE);
                         playerPokemon.setPokeState(PokeState.STUNNED);
