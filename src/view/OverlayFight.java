@@ -52,13 +52,14 @@ public class OverlayFight extends JPanel {
     hpPlayer.setValue(playerPokemon.getHp());
     hpPlayer.setStringPainted(true);
     hpPlayer.setString(playerPokemon.getHp() + " HP");
+    hpPlayer.setFont(new Font("Arial", Font.BOLD, 18));
 
     // HP Bot
     hpBot = new JProgressBar(0, botPokemon.getHp());
     hpBot.setValue(botPokemon.getHp());
     hpBot.setStringPainted(true);
     hpBot.setString(botPokemon.getHp() + " HP");
-
+    hpBot.setFont(new Font("Arial", Font.BOLD, 18));
         // Botões
         btnAttack = new JButton("Atacar");
         btnRun = new JButton("Fugir");
@@ -86,8 +87,8 @@ public class OverlayFight extends JPanel {
         int h = parent.getHeight();
 
         // HP bars
-        hpPlayer.setBounds(50, h / 2 - 120, 120, 20);
-        hpBot.setBounds(w - 170, h / 2 - 120, 120, 20);
+        hpPlayer.setBounds(85, h / 2 - 120, 120, 20);
+        hpBot.setBounds(w - 225, h / 2 - 120, 120, 20);
 
         // Botões
         btnAttack.setBounds(w / 2 - 110, h - 80, 100, 40);
