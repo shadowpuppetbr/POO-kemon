@@ -194,11 +194,11 @@ public class Game implements Serializable {
                     playerPokemon.resetHp();
                     botPokemon.resetHp();
                     playerPokemon.increaseXp();
-                    if (playerPokemon instanceof GroundPokemon) {
-                        ((GroundPokemon) playerPokemon).resetTurn();
+                    if (playerPokemon instanceof GroundPokemon groundPokemon) {
+                        groundPokemon.resetTurn();
                     }
-                    if (botPokemon instanceof GroundPokemon) {
-                        ((GroundPokemon) playerPokemon).resetTurn();
+                    if (botPokemon instanceof GroundPokemon groundPokemon) {
+                        groundPokemon.resetTurn();
                     }
                     player.addScore(1);
                     endPlayerTurn();
@@ -229,11 +229,11 @@ public class Game implements Serializable {
                         JOptionPane.showMessageDialog(screen, "Você perdeu a batalha!", "Derrota",
                                 JOptionPane.INFORMATION_MESSAGE);
                         overlay.setVisible(false);
-                        if (playerPokemon instanceof GroundPokemon) {
-                            ((GroundPokemon) playerPokemon).resetTurn();
+                        if (playerPokemon instanceof GroundPokemon groundPokemon) {
+                            groundPokemon.resetTurn();
                         }
-                        if (botPokemon instanceof GroundPokemon) {
-                            ((GroundPokemon) playerPokemon).resetTurn();
+                        if (botPokemon instanceof GroundPokemon groundPokemon) {
+                            groundPokemon.resetTurn();
                         }
                         bot.addScore(1);
                         endPlayerTurn();
@@ -257,16 +257,15 @@ public class Game implements Serializable {
             if (!allowRun)
                 return;
 
-            Random random = new Random();
             if (random.nextInt(100) < 70) {
                 JOptionPane.showMessageDialog(screen, "Você fugiu da batalha!", "Fuga",
                         JOptionPane.INFORMATION_MESSAGE);
                 overlay.setVisible(false);
-                if (playerPokemon instanceof GroundPokemon) {
-                    ((GroundPokemon) playerPokemon).resetTurn();
+                if (playerPokemon instanceof GroundPokemon groundPokemon) {
+                    groundPokemon.resetTurn();
                 }
-                if (botPokemon instanceof GroundPokemon) {
-                    ((GroundPokemon) playerPokemon).resetTurn();
+                if (botPokemon instanceof GroundPokemon groundPokemon) {
+                    groundPokemon.resetTurn();
                 }
                 endPlayerTurn();
             } else {

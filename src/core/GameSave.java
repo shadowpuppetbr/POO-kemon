@@ -11,8 +11,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import game.Game;
-
 public class GameSave {
 
     public static void saveGame(Game game) {

@@ -21,13 +21,13 @@ public class OverlayFight extends JPanel {
     private Timer botAttackTimer;
     private Timer playerFlashTimer;
     private Timer botFlashTimer;
-    private ImageIcon spritePlayer;
-    private ImageIcon spriteBot;
-    private JProgressBar hpPlayer;
-    private JProgressBar hpBot;
-    private JButton btnAttack;
-    private JButton btnRun;
-    private JFrame parent;
+    private final ImageIcon spritePlayer;
+    private final ImageIcon spriteBot;
+    private final JProgressBar hpPlayer;
+    private final JProgressBar hpBot;
+    private final JButton btnAttack;
+    private final JButton btnRun;
+    private final JFrame parent;
 
     public OverlayFight(JFrame parent, Pokemon playerPokemon, Pokemon botPokemon) {
     damageTimer = null;
@@ -78,8 +78,10 @@ public class OverlayFight extends JPanel {
         });
 
         // Define este painel como GlassPane
-        parent.setGlassPane(this);
-        setVisible(true);
+        SwingUtilities.invokeLater(() -> { // Para rodar após fim do construtor
+            parent.setGlassPane(this);
+            setVisible(true);
+        });
     }
 
     private void adjustLayout() {
@@ -181,7 +183,7 @@ public class OverlayFight extends JPanel {
         this.damageOnPlayer = isPlayer;
         repaint();
         if (damageTimer != null && damageTimer.isRunning()) damageTimer.stop();
-        damageTimer = new Timer(900, e -> {
+        damageTimer = new Timer(900, _ -> {
             damageValue = null;
             repaint();
         });
@@ -199,7 +201,7 @@ public class OverlayFight extends JPanel {
         this.turnMessage = msg;
         repaint();
         if (turnMessageTimer != null && turnMessageTimer.isRunning()) turnMessageTimer.stop();
-        turnMessageTimer = new Timer(millis, e -> {
+        turnMessageTimer = new Timer(millis, _ -> {
             turnMessage = null;
             repaint();
         });
@@ -233,13 +235,13 @@ public class OverlayFight extends JPanel {
         if (playerAttackTimer != null && playerAttackTimer.isRunning()) playerAttackTimer.stop();
         playerOffsetX = 0;
         playerAttackTimer = new Timer(15, null);
-        playerAttackTimer.addActionListener(e -> {
+        playerAttackTimer.addActionListener(_ -> {
             playerOffsetX += 10;
             if (playerOffsetX >= 60) {
                 playerAttackTimer.stop();
                 // Volta para posição original
                 Timer backTimer = new Timer(15, null);
-                backTimer.addActionListener(ev -> {
+                backTimer.addActionListener(_ -> {
                     playerOffsetX -= 10;
                     if (playerOffsetX <= 0) {
                         playerOffsetX = 0;
@@ -259,13 +261,13 @@ public class OverlayFight extends JPanel {
         if (botAttackTimer != null && botAttackTimer.isRunning()) botAttackTimer.stop();
         botOffsetX = 0;
         botAttackTimer = new Timer(15, null);
-        botAttackTimer.addActionListener(e -> {
+        botAttackTimer.addActionListener(_ -> {
             botOffsetX += 10;
             if (botOffsetX >= 60) {
                 botAttackTimer.stop();
                 // Volta para posição original
                 Timer backTimer = new Timer(15, null);
-                backTimer.addActionListener(ev -> {
+                backTimer.addActionListener(_ -> {
                     botOffsetX -= 10;
                     if (botOffsetX <= 0) {
                         botOffsetX = 0;
@@ -287,7 +289,7 @@ public class OverlayFight extends JPanel {
         repaint();
         playerFlashTimer = new Timer(60, null);
         playerFlashTimer.setRepeats(false);
-        playerFlashTimer.addActionListener(e -> {
+        playerFlashTimer.addActionListener(_ -> {
             playerFlash = false;
             repaint();
         });
@@ -301,7 +303,7 @@ public class OverlayFight extends JPanel {
         repaint();
         botFlashTimer = new Timer(60, null);
         botFlashTimer.setRepeats(false);
-        botFlashTimer.addActionListener(e -> {
+        botFlashTimer.addActionListener(_ -> {
             botFlash = false;
             repaint();
         });
