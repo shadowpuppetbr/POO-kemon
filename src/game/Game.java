@@ -361,12 +361,42 @@ public class Game implements Serializable {
         startPlayerTurn();
     }
 
+
     public void resumeGameAfterLoading() {
+
         this.screen = new Screen(this.board);
         this.screen.initializeScreen();
+        this.bot.setGame(this);
+
+
+        for (Pokemon p : this.player.getTeam()) {
+            PokemonFactory.reinitializePokemonImage(p);
+        }
+        for (Pokemon p : this.bot.getTeam()) {
+            PokemonFactory.reinitializePokemonImage(p);
+        }
+        for (int i = 0; i < board.getBoardSize(); i++) {
+            for (int j = 0; j < board.getBoardSize(); j++) {
+                Pokemon p = board.getCell(i, j).getPokemon();
+                if (p != null) {
+                    PokemonFactory.reinitializePokemonImage(p);
+                }
+            }
+        }
+
         setupActionListeners();
+
         this.board.updateBoardStateAfterLoading();
-        startGameLoop();
+    
+        new Thread(this.bot).start();
+
+        JOptionPane.showMessageDialog(screen, "Jogo carregado. Continue de onde parou.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+    
+        if (this.botTurn) {
+            endPlayerTurn();
+        } else {
+            startPlayerTurn();
+        }
     }
 
     private void startPlayerTurn() {

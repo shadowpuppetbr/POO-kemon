@@ -24,4 +24,12 @@ public class PokemonFactory {
 
         return pokemon;
     }
+    public static void reinitializePokemonImage(Pokemon pokemon) {
+        if (pokemon == null) return;
+        
+        String name = pokemon.getName();
+        String imagePath = "src/resources/images/pokemon/" + name.toLowerCase() + ".png";
+        ImageIcon image = new ImageIcon(imagePath);
+        pokemon.setImage(image);
+    }
 }
